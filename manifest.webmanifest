@@ -1,10 +1,13 @@
 {
-  "name": "KilnCalc Glass Fusing Calculator",
+  "name": "KilnCalc 5.0 Glass Fusing Calculator",
   "short_name": "KilnCalc",
+  "description": "Offline glass fusing and slumping calculator based on the 22 July 2026 Excel workbook.",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f3f5f7",
-  "theme_color": "#16324f",
+  "orientation": "portrait",
+  "background_color": "#eef2f4",
+  "theme_color": "#15324c",
   "icons": [
     {
       "src": "icon-180.png",
@@ -14,7 +17,8 @@
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

@@ -1,291 +1,258 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="system">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#16324f">
+  <meta name="theme-color" content="#15324c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="KilnCalc">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
-  <title>KilnCalc</title>
-  <style>
-    :root{
-      --navy:#16324f; --teal:#2a9d8f; --dark:#263238; --bg:#f3f5f7;
-      --card:#fff; --input:#fff4cc; --calc:#e8f5e9; --line:#ccd5db;
-      --warn:#fff7e6; --danger:#b42318;
-    }
-    *{box-sizing:border-box}
-    html{background:var(--navy)}
-    body{
-      margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-      background:var(--bg); color:#18212a; min-height:100vh;
-      padding-bottom:calc(90px + env(safe-area-inset-bottom));
-    }
-    header{
-      position:sticky; top:0; z-index:10; background:var(--navy); color:white;
-      padding:calc(14px + env(safe-area-inset-top)) 16px 14px;
-      box-shadow:0 2px 12px #0003;
-    }
-    header h1{font-size:22px;margin:0;text-align:center}
-    header p{font-size:12px;margin:5px 0 0;text-align:center;opacity:.9}
-    main{max-width:680px;margin:auto;padding:14px}
-    section{
-      background:var(--card); border-radius:16px; margin:0 0 14px;
-      box-shadow:0 2px 10px #00000012; overflow:hidden;
-    }
-    section h2{
-      margin:0; padding:13px 15px; background:var(--dark); color:white;
-      font-size:16px; letter-spacing:.2px;
-    }
-    .content{padding:12px}
-    .field{
-      display:grid; grid-template-columns:minmax(0,1fr) minmax(120px,42%) auto;
-      gap:8px; align-items:center; padding:7px 0; border-bottom:1px solid #edf0f2;
-    }
-    .field:last-child{border-bottom:0}
-    label{font-weight:650;font-size:14px}
-    input,select{
-      width:100%; min-height:46px; border:1px solid #d7bd55; border-radius:10px;
-      background:var(--input); padding:8px 10px; font-size:16px; font-weight:700;
-      color:#14202b;
-    }
-    input:focus,select:focus{outline:3px solid #2a9d8f55;border-color:var(--teal)}
-    .unit{font-size:12px;color:#56616b;min-width:35px}
-    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .result{
-      background:var(--calc); border:1px solid #b9dfd6; border-radius:12px;
-      padding:12px; min-height:82px;
-    }
-    .result .name{font-size:12px;color:#40515c;font-weight:650}
-    .result .value{font-size:25px;font-weight:800;color:var(--navy);margin-top:6px}
-    .result .u{font-size:12px;font-weight:600}
-    .schedule{display:grid;gap:9px}
-    .step{
-      border:1px solid var(--line); border-radius:12px; padding:11px;
-      display:grid; grid-template-columns:42px 1fr; gap:10px; background:#fafdfe;
-    }
-    .stepno{
-      width:38px;height:38px;border-radius:50%;background:var(--teal);color:white;
-      display:flex;align-items:center;justify-content:center;font-weight:800
-    }
-    .step h3{margin:0 0 6px;font-size:15px}
-    .metrics{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
-    .metrics strong{font-size:16px;color:var(--navy)}
-    .note{background:var(--warn);padding:12px;border-radius:10px;font-size:13px;line-height:1.45}
-    .actions{
-      position:fixed;bottom:0;left:0;right:0;z-index:15;
-      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-      background:#ffffffef; backdrop-filter:blur(12px); border-top:1px solid #dfe4e8;
-      display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;
-    }
-    button{
-      min-height:46px;border:0;border-radius:11px;font-size:14px;font-weight:750;
-      background:var(--navy);color:white;padding:8px;
-    }
-    button.secondary{background:var(--teal)}
-    button.light{background:#e4e9ed;color:#22313d}
-    .status{font-size:12px;text-align:center;color:#52616c;margin:8px 0 0}
-    .hidden{display:none}
-    @media(max-width:390px){
-      .field{grid-template-columns:minmax(0,1fr) minmax(112px,44%) auto}
-      .result-grid{grid-template-columns:1fr 1fr}
-      label{font-size:13px}
-    }
-    @media print{
-      header,.actions,#dataSection,.note{display:none!important}
-      body{padding:0;background:white}
-      main{max-width:none;padding:0}
-      section{box-shadow:none;border:1px solid #bbb;break-inside:avoid}
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
+  <title>KilnCalc 5.0</title>
 </head>
 <body>
-<header>
-  <h1>KilnCalc</h1>
-  <p>Glass fusing & slumping calculator</p>
+<header class="app-header">
+  <div class="header-inner">
+    <div>
+      <h1>KilnCalc <span>5.0</span></h1>
+      <p>Glass fusing & slumping calculator</p>
+    </div>
+    <button id="newButton" class="header-button">New</button>
+  </div>
 </header>
 
-<main>
-  <section id="dataSection">
-    <h2>1. Input</h2>
-    <div class="content">
-      <div class="field"><label for="glass">Glass type</label><select id="glass">
-        <option>System96</option><option>Bullseye-COE90</option><option>COE-90 experimental</option>
-      </select><span class="unit"></span></div>
-      <div class="field"><label for="diameter">Round diameter</label><input id="diameter" type="number" min="0" max="60" step="0.1" value="30"><span class="unit">cm</span></div>
-      <div class="field"><label for="length">Length</label><input id="length" type="number" min="0" max="60" step="0.1" value="0"><span class="unit">cm</span></div>
-      <div class="field"><label for="width">Width</label><input id="width" type="number" min="0" max="60" step="0.1" value="0"><span class="unit">cm</span></div>
-      <div class="field"><label for="thickness">Maximum thickness</label><input id="thickness" type="number" min="1" max="50" step="0.1" value="6"><span class="unit">mm</span></div>
-      <div class="field"><label for="history">Heating history</label><select id="history">
-        <option>1e-heating</option><option>2e or more heating</option><option>Old fuse + New layer</option>
-      </select><span class="unit"></span></div>
-      <div class="field"><label for="process">Process</label><select id="process">
-        <option>TackFuse</option><option>ContourFuse</option><option>FullFuse</option>
-        <option>Slump-Ceramic</option><option>Slump-Other</option>
-      </select><span class="unit"></span></div>
-      <div class="field"><label for="bubble">Bubble soak</label><select id="bubble">
-        <option>No Bubble Soak</option><option>Slow + 15 min</option><option>Slow + 30 min</option>
-        <option>Slow + 60 min</option><option>Full + 15 min</option><option>Full + 30 min</option>
-        <option>Full + 60 min</option>
-      </select><span class="unit"></span></div>
-      <div class="field"><label for="dams">Enclosure / dams</label><select id="dams">
-        <option>N.v.t.</option><option>NoDams down to 6mm</option><option>Recalculate diameter</option>
-      </select><span class="unit"></span></div>
-      <div class="field"><label for="oven">Oven type</label><select id="oven">
-        <option>Top-Firing</option><option>Side-Firing</option>
-      </select><span class="unit"></span></div>
-      <div class="field"><label for="ceramicRate">Ceramic max. rate</label><input id="ceramicRate" type="number" min="1" step="1" value="300"><span class="unit">°C/h</span></div>
-      <div class="field"><label for="transformHold">Transformation hold</label><input id="transformHold" type="number" min="0" step="1" value="30"><span class="unit">min</span></div>
-      <div class="field"><label for="topHold">Top-temperature hold</label><input id="topHold" type="number" min="0" step="1" value="10"><span class="unit">min</span></div>
-      <div class="field"><label for="description">Description</label><input id="description" type="text" value="Test piece"><span class="unit"></span></div>
-      <p class="status" id="saveStatus">Values are saved automatically on this device.</p>
-    </div>
-  </section>
-
-  <section>
-    <h2>2. Key results</h2>
-    <div class="content result-grid">
-      <div class="result"><div class="name">Effective size</div><div class="value" id="effective">30.0 <span class="u">cm</span></div></div>
-      <div class="result"><div class="name">Top temperature</div><div class="value" id="topTemp">738 <span class="u">°C</span></div></div>
-      <div class="result"><div class="name">First heating rate</div><div class="value" id="firstRate">321 <span class="u">°C/h</span></div></div>
-      <div class="result"><div class="name">First heating</div><div class="value" id="firstMinutes">102 <span class="u">min</span></div></div>
-      <div class="result"><div class="name">Anneal time</div><div class="value" id="annealMinutes">68 <span class="u">min</span></div></div>
-      <div class="result"><div class="name">Estimated duration</div><div class="value" id="duration">3.7 <span class="u">h</span></div></div>
-      <div class="result"><div class="name">Calculated final diameter</div><div class="value" id="finalDiameter">30.0 <span class="u">cm</span></div></div>
-      <div class="result"><div class="name">Minutes per mm</div><div class="value" id="minutesPerMm">17.0 <span class="u">min</span></div></div>
-    </div>
-  </section>
-
-  <section>
-    <h2>3. Firing schedule</h2>
-    <div class="content">
-      <div class="schedule" id="schedule"></div>
-      <p class="note">This calculator is a practical starting point. Kilns and glass projects differ. Test valuable projects first and maintain your own kiln log.</p>
-    </div>
-  </section>
-</main>
-
-<div class="actions">
-  <button class="secondary" id="shareBtn">Share</button>
-  <button id="printBtn">Print / PDF</button>
-  <button class="light" id="resetBtn">Reset</button>
+<div id="updateNotice" class="update-notice" hidden>
+  <span id="updateText"></span>
+  <button id="updateButton">Refresh</button>
 </div>
 
+<main>
+  <input id="activeProjectId" type="hidden">
+  <input id="importFile" type="file" accept=".json,.kilncalc.json" hidden>
+
+  <section class="toolbar-card">
+    <div class="toolbar">
+      <button id="undoButton" class="tool-button">↶ <span>Undo</span></button>
+      <button id="redoButton" class="tool-button">↷ <span>Redo</span></button>
+      <label class="theme-control">Theme
+        <select id="themeSelect">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <details class="panel" data-section="dimensions" open>
+    <summary><span>1</span> Shape & dimensions</summary>
+    <div class="panel-body form-grid">
+      <label class="full">Glass shape
+        <select id="shapeMode">
+          <option value="round">Round glass</option>
+          <option value="rectangle">Rectangular glass</option>
+        </select>
+      </label>
+
+      <label id="roundCard">Diameter / effective size <span>cm</span>
+        <input id="roundDiameter" type="number" min="0" max="60" step="0.1" value="40">
+        <small>Editable for round glass; calculated and locked for rectangular glass.</small>
+      </label>
+
+      <label>Length <span>cm</span>
+        <input id="length" type="number" min="0" max="60" step="0.1" value="0">
+      </label>
+
+      <label>Width <span>cm</span>
+        <input id="width" type="number" min="0" max="60" step="0.1" value="0">
+      </label>
+
+      <label class="switch-row full">
+        <input id="autoShape" type="checkbox" checked>
+        <span>Automatically switch to rectangular mode when a dimension is entered</span>
+      </label>
+
+      <p id="rectangleHelp" class="info-strip full" hidden>
+        Both dimensions are required. The calculated diagonal replaces the diameter automatically.
+      </p>
+
+      <div class="calculated-field full">
+        <div><strong>Effective size used</strong><small id="effectiveMessage"></small></div>
+        <output><span id="effectiveSize">40.0</span> cm</output>
+      </div>
+
+      <div class="calculated-field subtle full">
+        <div><strong>Diagonal</strong><small>Rounded to one decimal, as in Excel.</small></div>
+        <output><span id="diagonal">—</span> cm</output>
+      </div>
+    </div>
+  </details>
+
+  <details class="panel" data-section="firing" open>
+    <summary><span>2</span> Glass & firing input</summary>
+    <div class="panel-body form-grid">
+      <label>Glass type
+        <select id="glassType">
+          <option>System96</option>
+          <option selected>Bullseye-COE90</option>
+          <option>COE-90 experimental</option>
+        </select>
+      </label>
+
+      <label>Maximum thickness <span>mm</span>
+        <input id="thickness" type="number" min="0" max="50" step="0.1" value="6">
+      </label>
+
+      <label>Heating history
+        <select id="heatingHistory">
+          <option>1e-heating</option>
+          <option>2e or more heating</option>
+          <option>Old fuse + New layer</option>
+        </select>
+      </label>
+
+      <label>Process
+        <select id="process">
+          <option>TackFuse</option>
+          <option>ContourFuse</option>
+          <option selected>FullFuse</option>
+          <option>Slump-Ceramic</option>
+          <option>Slump-Other</option>
+        </select>
+      </label>
+
+      <label>Bubble soak
+        <select id="bubbleSoak">
+          <option>No Bubble Soak</option>
+          <option>Slow + 15 min</option>
+          <option>Slow + 30 min</option>
+          <option>Slow + 60 min</option>
+          <option>Full + 15 min</option>
+          <option>Full + 30 min</option>
+          <option>Full + 60 min</option>
+        </select>
+      </label>
+
+      <label>Enclosure / dams
+        <select id="enclosure">
+          <option>N.v.t.</option>
+          <option>NoDams down to 6mm</option>
+          <option>Recalculate diameter</option>
+        </select>
+      </label>
+
+      <div id="ceramicFields" class="field-group full">
+        <label>Kiln firing type
+          <select id="ovenType">
+            <option>Top-Firing</option>
+            <option>Side-Firing</option>
+          </select>
+        </label>
+
+        <label>Ceramic mold max rate <span>°C/u</span>
+          <input id="ceramicMaxRate" type="number" min="1" step="1" value="330">
+        </label>
+      </div>
+
+      <label>Transformation hold <span>min</span>
+        <input id="transformationHold" type="number" min="0" step="1" value="30">
+      </label>
+
+      <label>Top-temperature hold <span>min</span>
+        <input id="topTemperatureHold" type="number" min="0" step="1" value="10">
+      </label>
+
+      <label class="full">Project description
+        <input id="description" type="text" value="Proefstuk">
+      </label>
+
+      <p id="saveStatus" class="save-status full"></p>
+    </div>
+  </details>
+
+  <div id="warnings" class="warnings" hidden></div>
+
+  <details class="panel" data-section="results" open>
+    <summary><span>3</span> Calculated results</summary>
+    <div class="panel-body result-grid">
+      <div class="result"><small>Transformation point</small><strong id="transformationPoint">516</strong><span>°C</span></div>
+      <div class="result"><small>Softening point</small><strong id="softeningPoint">677</strong><span>°C</span></div>
+      <div class="result accent"><small>Top temperature</small><strong id="topTemperature">804</strong><span>°C</span></div>
+      <div class="result"><small>Upper anneal</small><strong id="upperAnneal">482</strong><span>°C</span></div>
+      <div class="result"><small>Lower anneal</small><strong id="lowerAnneal">371</strong><span>°C</span></div>
+      <div class="result"><small>Effective thickness</small><strong id="effectiveThickness">6.0</strong><span>mm</span></div>
+      <div class="result"><small>Minutes per mm</small><strong id="minutesPerMm">18.36</strong><span>min</span></div>
+      <div class="result"><small>First heating</small><strong id="firstHeatingMinutes">110</strong><span>min</span></div>
+      <div class="result accent"><small>First heating rate</small><strong id="firstHeatingRate">271</strong><span>°C/u</span></div>
+      <div class="result"><small>Bubble rate</small><strong id="bubbleRate">9999</strong><span>°C/u</span></div>
+      <div class="result"><small>Bubble hold</small><strong id="bubbleHold">0</strong><span>min</span></div>
+      <div class="result"><small>Anneal time</small><strong id="annealTime">73</strong><span>min</span></div>
+      <div class="result"><small>Anneal hold</small><strong id="annealHold">24</strong><span>min</span></div>
+      <div class="result"><small>Calculated final diameter</small><strong id="calculatedFinalDiameter">40.0</strong><span>cm</span></div>
+      <div class="result accent"><small>Total estimated duration</small><strong id="totalDurationHours">4.1</strong><span>hours</span></div>
+    </div>
+  </details>
+
+  <details class="panel" data-section="schedule" open>
+    <summary><span>4</span> Automatic firing schedule</summary>
+    <div class="panel-body" id="scheduleBody"></div>
+  </details>
+
+  <details class="panel" data-section="comparison">
+    <summary><span>5</span> Glass-type comparison</summary>
+    <div class="panel-body table-scroll">
+      <table>
+        <thead><tr><th>Glass</th><th>Transform</th><th>Selected top</th><th>Upper</th><th>Lower</th></tr></thead>
+        <tbody id="comparisonBody"></tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="panel" data-section="projects" open>
+    <summary><span>6</span> Project library <em id="projectCount">0</em></summary>
+    <div class="panel-body">
+      <div class="project-actions">
+        <button id="saveProjectButton" class="primary">Save project</button>
+        <button id="exportCurrentButton">Export current</button>
+        <button id="importButton">Import</button>
+        <button id="exportAllButton">Export all</button>
+      </div>
+      <div id="projectList"></div>
+    </div>
+  </details>
+
+  <details class="panel help-panel" data-section="help">
+    <summary><span>?</span> Help & calculation notes</summary>
+    <div class="panel-body help-content">
+      <p><strong>Workbook source:</strong> Version 22 July 2026. The calculation constants and active formulas are reproduced in the JavaScript engine.</p>
+      <p><strong>Round glass:</strong> enter the widest diameter.</p>
+      <p><strong>Rectangular glass:</strong> enter length and width; the rounded diagonal becomes the effective diameter.</p>
+      <p><strong>Heating history:</strong> repeated firing receives a longer, more conservative transformation time.</p>
+      <p><strong>Bubble soak:</strong> unavailable for slump processes because slump temperature is below the softening point.</p>
+      <p><strong>FullFuse and dams:</strong> effective annealing thickness may be recalculated to 6 mm, matching the workbook logic.</p>
+      <p>Always test valuable projects with sample glass and use kiln-manufacturer guidance.</p>
+    </div>
+  </details>
+</main>
+
+<nav class="action-bar">
+  <button id="saveProjectButtonBottom">Save</button>
+  <button id="shareButton">Share</button>
+  <button id="printButton">Print / PDF</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<script type="module" src="app.js"></script>
 <script>
-const glassData = {
-  "System96": {transform:566, soften:677, tack:738, contour:770, full:796, slump:663, upper:510, lower:427},
-  "Bullseye-COE90": {transform:516, soften:677, tack:732, contour:760, full:804, slump:663, upper:482, lower:371},
-  "COE-90 experimental": {transform:516, soften:677, tack:732, contour:760, full:804, slump:663, upper:482, lower:371}
-};
-const ids = ["glass","diameter","length","width","thickness","history","process","bubble","dams","oven","ceramicRate","transformHold","topHold","description"];
-const $ = id => document.getElementById(id);
-const num = id => Math.max(0, Number($(id).value) || 0);
-const round = (n,d=0) => Number(n.toFixed(d));
-const storageKey = "kilncalc-project-v1";
-
-function effectiveSize(){
-  const l=num("length"), w=num("width"), d=num("diameter");
-  if(l>0 && w>0) return round(Math.sqrt(l*l+w*w),1);
-  if(l>0) return l;
-  if(w>0) return w;
-  return d || 30;
-}
-function bubbleHold(){
-  const m=$("bubble").value.match(/(15|30|60)/);
-  return m ? Number(m[1]) : 0;
-}
-function calculate(){
-  const gd=glassData[$("glass").value];
-  const size=effectiveSize();
-  const thick=Math.max(1,num("thickness"));
-  const historyFactor=$("history").value==="2e or more heating" ? 1.20 :
-    ($("history").value==="Old fuse + New layer" ? 1.35 : 1);
-  const minutesPerMm=round(17*(1+0.08*(Math.max(size,1)-30)/10)*historyFactor,2);
-  const firstMinutes=round(thick*minutesPerMm);
-  const firstRate=firstMinutes>0 ? round((gd.transform-20)/(firstMinutes/60)) : 0;
-  const process=$("process").value;
-  const top=process==="TackFuse"?gd.tack:process==="ContourFuse"?gd.contour:
-    process==="FullFuse"?gd.full:gd.slump;
-  const effectiveThickness=(process==="FullFuse" && $("dams").value!=="N.v.t." && thick>6)?6:thick;
-  const anneal=round(firstMinutes*0.6667);
-  const annealHold=round(anneal*0.3333);
-  const bHold=bubbleHold();
-  const slow=$("bubble").value.startsWith("Slow");
-  const bubbleRate=slow?139:9999;
-  const bubbleRamp=bHold===0?0:round((gd.soften-gd.transform)/(bubbleRate/60));
-  const topRamp=round((top-(bHold===0?gd.transform:gd.soften))/10);
-  const total=(firstMinutes+bubbleRamp+bHold+topRamp+num("topHold")+anneal+annealHold)/60;
-  const finalDiameter=(process==="FullFuse" && $("dams").value==="Recalculate diameter" && thick>6)
-    ? round(size*Math.sqrt(thick/6),1):round(size,1);
-
-  $("effective").innerHTML=`${round(size,1).toFixed(1)} <span class="u">cm</span>`;
-  $("topTemp").innerHTML=`${top} <span class="u">°C</span>`;
-  $("firstRate").innerHTML=`${firstRate} <span class="u">°C/h</span>`;
-  $("firstMinutes").innerHTML=`${firstMinutes} <span class="u">min</span>`;
-  $("annealMinutes").innerHTML=`${anneal} <span class="u">min</span>`;
-  $("duration").innerHTML=`${round(total,1).toFixed(1)} <span class="u">h</span>`;
-  $("finalDiameter").innerHTML=`${finalDiameter.toFixed(1)} <span class="u">cm</span>`;
-  $("minutesPerMm").innerHTML=`${minutesPerMm.toFixed(2)} <span class="u">min</span>`;
-
-  const ceramicRate=num("ceramicRate")||300;
-  const schedule=[
-    ["Transformation",firstRate,gd.transform,num("transformHold"),"Slowly through the critical range"],
-    ["Bubble soak",bHold?bubbleRate:"Skip",bHold?gd.soften:"Skip",bHold||"Skip","Vent around softening point"],
-    ["Top temperature",process==="Slump-Ceramic"?ceramicRate:"Full",top,num("topHold"),"Fuse or slump"],
-    ["Upper anneal","Full",gd.upper,annealHold,"Controlled fast cooling"],
-    ["Lower anneal",round((gd.upper-gd.lower)/(anneal/60)),gd.lower,annealHold,"Controlled annealing range"],
-    ["Cooling",73,200,0,"Keep kiln closed"],
-    ["End","End",50,0,"Open at approximately 50 °C"]
-  ];
-  $("schedule").innerHTML=schedule.map((s,i)=>`
-    <div class="step">
-      <div class="stepno">${i+1}</div>
-      <div><h3>${s[0]}</h3><div class="metrics">
-        <span>Rate <strong>${s[1]}</strong> °C/h</span>
-        <span>Target <strong>${s[2]}</strong> °C</span>
-        <span>Hold <strong>${s[3]}</strong> min</span>
-      </div><div class="unit">${s[4]}</div></div>
-    </div>`).join("");
-  save();
-}
-function save(){
-  const data={}; ids.forEach(id=>data[id]=$(id).value);
-  localStorage.setItem(storageKey,JSON.stringify(data));
-  $("saveStatus").textContent="Saved automatically on this device.";
-}
-function load(){
-  try{
-    const data=JSON.parse(localStorage.getItem(storageKey)||"null");
-    if(data) ids.forEach(id=>{if(data[id]!==undefined)$(id).value=data[id]});
-  }catch(e){}
-}
-function reset(){
-  localStorage.removeItem(storageKey);
-  location.reload();
-}
-async function share(){
-  const text=`KilnCalc — ${$("description").value}
-Effective size: ${effectiveSize().toFixed(1)} cm
-Top temperature: ${$("topTemp").innerText}
-First heating rate: ${$("firstRate").innerText}
-Estimated duration: ${$("duration").innerText}`;
-  if(navigator.share){
-    try{await navigator.share({title:"KilnCalc result",text})}catch(e){}
-  }else{
-    await navigator.clipboard.writeText(text);
-    alert("Result copied to clipboard.");
-  }
-}
-ids.forEach(id=>$(id).addEventListener("input",calculate));
-ids.forEach(id=>$(id).addEventListener("change",calculate));
-$("resetBtn").addEventListener("click",()=>{if(confirm("Reset all values?"))reset()});
-$("printBtn").addEventListener("click",()=>window.print());
-$("shareBtn").addEventListener("click",share);
-load(); calculate();
-if("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("saveProjectButtonBottom").addEventListener("click", () =>
+    document.getElementById("saveProjectButton").click()
+  );
+});
 </script>
 </body>
 </html>

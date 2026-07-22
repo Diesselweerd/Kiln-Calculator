@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#16324f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KilnCalc">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <title>KilnCalc</title>
+  <style>
+    :root{
+      --navy:#16324f; --teal:#2a9d8f; --dark:#263238; --bg:#f3f5f7;
+      --card:#fff; --input:#fff4cc; --calc:#e8f5e9; --line:#ccd5db;
+      --warn:#fff7e6; --danger:#b42318;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--navy)}
+    body{
+      margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      background:var(--bg); color:#18212a; min-height:100vh;
+      padding-bottom:calc(90px + env(safe-area-inset-bottom));
+    }
+    header{
+      position:sticky; top:0; z-index:10; background:var(--navy); color:white;
+      padding:calc(14px + env(safe-area-inset-top)) 16px 14px;
+      box-shadow:0 2px 12px #0003;
+    }
+    header h1{font-size:22px;margin:0;text-align:center}
+    header p{font-size:12px;margin:5px 0 0;text-align:center;opacity:.9}
+    main{max-width:680px;margin:auto;padding:14px}
+    section{
+      background:var(--card); border-radius:16px; margin:0 0 14px;
+      box-shadow:0 2px 10px #00000012; overflow:hidden;
+    }
+    section h2{
+      margin:0; padding:13px 15px; background:var(--dark); color:white;
+      font-size:16px; letter-spacing:.2px;
+    }
+    .content{padding:12px}
+    .field{
+      display:grid; grid-template-columns:minmax(0,1fr) minmax(120px,42%) auto;
+      gap:8px; align-items:center; padding:7px 0; border-bottom:1px solid #edf0f2;
+    }
+    .field:last-child{border-bottom:0}
+    label{font-weight:650;font-size:14px}
+    input,select{
+      width:100%; min-height:46px; border:1px solid #d7bd55; border-radius:10px;
+      background:var(--input); padding:8px 10px; font-size:16px; font-weight:700;
+      color:#14202b;
+    }
+    input:focus,select:focus{outline:3px solid #2a9d8f55;border-color:var(--teal)}
+    .unit{font-size:12px;color:#56616b;min-width:35px}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .result{
+      background:var(--calc); border:1px solid #b9dfd6; border-radius:12px;
+      padding:12px; min-height:82px;
+    }
+    .result .name{font-size:12px;color:#40515c;font-weight:650}
+    .result .value{font-size:25px;font-weight:800;color:var(--navy);margin-top:6px}
+    .result .u{font-size:12px;font-weight:600}
+    .schedule{display:grid;gap:9px}
+    .step{
+      border:1px solid var(--line); border-radius:12px; padding:11px;
+      display:grid; grid-template-columns:42px 1fr; gap:10px; background:#fafdfe;
+    }
+    .stepno{
+      width:38px;height:38px;border-radius:50%;background:var(--teal);color:white;
+      display:flex;align-items:center;justify-content:center;font-weight:800
+    }
+    .step h3{margin:0 0 6px;font-size:15px}
+    .metrics{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+    .metrics strong{font-size:16px;color:var(--navy)}
+    .note{background:var(--warn);padding:12px;border-radius:10px;font-size:13px;line-height:1.45}
+    .actions{
+      position:fixed;bottom:0;left:0;right:0;z-index:15;
+      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      background:#ffffffef; backdrop-filter:blur(12px); border-top:1px solid #dfe4e8;
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;
+    }
+    button{
+      min-height:46px;border:0;border-radius:11px;font-size:14px;font-weight:750;
+      background:var(--navy);color:white;padding:8px;
+    }
+    button.secondary{background:var(--teal)}
+    button.light{background:#e4e9ed;color:#22313d}
+    .status{font-size:12px;text-align:center;color:#52616c;margin:8px 0 0}
+    .hidden{display:none}
+    @media(max-width:390px){
+      .field{grid-template-columns:minmax(0,1fr) minmax(112px,44%) auto}
+      .result-grid{grid-template-columns:1fr 1fr}
+      label{font-size:13px}
+    }
+    @media print{
+      header,.actions,#dataSection,.note{display:none!important}
+      body{padding:0;background:white}
+      main{max-width:none;padding:0}
+      section{box-shadow:none;border:1px solid #bbb;break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>KilnCalc</h1>
+  <p>Glass fusing & slumping calculator</p>
+</header>
+
+<main>
+  <section id="dataSection">
+    <h2>1. Input</h2>
+    <div class="content">
+      <div class="field"><label for="glass">Glass type</label><select id="glass">
+        <option>System96</option><option>Bullseye-COE90</option><option>COE-90 experimental</option>
+      </select><span class="unit"></span></div>
+      <div class="field"><label for="diameter">Round diameter</label><input id="diameter" type="number" min="0" max="60" step="0.1" value="30"><span class="unit">cm</span></div>
+      <div class="field"><label for="length">Length</label><input id="length" type="number" min="0" max="60" step="0.1" value="0"><span class="unit">cm</span></div>
+      <div class="field"><label for="width">Width</label><input id="width" type="number" min="0" max="60" step="0.1" value="0"><span class="unit">cm</span></div>
+      <div class="field"><label for="thickness">Maximum thickness</label><input id="thickness" type="number" min="1" max="50" step="0.1" value="6"><span class="unit">mm</span></div>
+      <div class="field"><label for="history">Heating history</label><select id="history">
+        <option>1e-heating</option><option>2e or more heating</option><option>Old fuse + New layer</option>
+      </select><span class="unit"></span></div>
+      <div class="field"><label for="process">Process</label><select id="process">
+        <option>TackFuse</option><option>ContourFuse</option><option>FullFuse</option>
+        <option>Slump-Ceramic</option><option>Slump-Other</option>
+      </select><span class="unit"></span></div>
+      <div class="field"><label for="bubble">Bubble soak</label><select id="bubble">
+        <option>No Bubble Soak</option><option>Slow + 15 min</option><option>Slow + 30 min</option>
+        <option>Slow + 60 min</option><option>Full + 15 min</option><option>Full + 30 min</option>
+        <option>Full + 60 min</option>
+      </select><span class="unit"></span></div>
+      <div class="field"><label for="dams">Enclosure / dams</label><select id="dams">
+        <option>N.v.t.</option><option>NoDams down to 6mm</option><option>Recalculate diameter</option>
+      </select><span class="unit"></span></div>
+      <div class="field"><label for="oven">Oven type</label><select id="oven">
+        <option>Top-Firing</option><option>Side-Firing</option>
+      </select><span class="unit"></span></div>
+      <div class="field"><label for="ceramicRate">Ceramic max. rate</label><input id="ceramicRate" type="number" min="1" step="1" value="300"><span class="unit">°C/h</span></div>
+      <div class="field"><label for="transformHold">Transformation hold</label><input id="transformHold" type="number" min="0" step="1" value="30"><span class="unit">min</span></div>
+      <div class="field"><label for="topHold">Top-temperature hold</label><input id="topHold" type="number" min="0" step="1" value="10"><span class="unit">min</span></div>
+      <div class="field"><label for="description">Description</label><input id="description" type="text" value="Test piece"><span class="unit"></span></div>
+      <p class="status" id="saveStatus">Values are saved automatically on this device.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Key results</h2>
+    <div class="content result-grid">
+      <div class="result"><div class="name">Effective size</div><div class="value" id="effective">30.0 <span class="u">cm</span></div></div>
+      <div class="result"><div class="name">Top temperature</div><div class="value" id="topTemp">738 <span class="u">°C</span></div></div>
+      <div class="result"><div class="name">First heating rate</div><div class="value" id="firstRate">321 <span class="u">°C/h</span></div></div>
+      <div class="result"><div class="name">First heating</div><div class="value" id="firstMinutes">102 <span class="u">min</span></div></div>
+      <div class="result"><div class="name">Anneal time</div><div class="value" id="annealMinutes">68 <span class="u">min</span></div></div>
+      <div class="result"><div class="name">Estimated duration</div><div class="value" id="duration">3.7 <span class="u">h</span></div></div>
+      <div class="result"><div class="name">Calculated final diameter</div><div class="value" id="finalDiameter">30.0 <span class="u">cm</span></div></div>
+      <div class="result"><div class="name">Minutes per mm</div><div class="value" id="minutesPerMm">17.0 <span class="u">min</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Firing schedule</h2>
+    <div class="content">
+      <div class="schedule" id="schedule"></div>
+      <p class="note">This calculator is a practical starting point. Kilns and glass projects differ. Test valuable projects first and maintain your own kiln log.</p>
+    </div>
+  </section>
+</main>
+
+<div class="actions">
+  <button class="secondary" id="shareBtn">Share</button>
+  <button id="printBtn">Print / PDF</button>
+  <button class="light" id="resetBtn">Reset</button>
+</div>
+
+<script>
+const glassData = {
+  "System96": {transform:566, soften:677, tack:738, contour:770, full:796, slump:663, upper:510, lower:427},
+  "Bullseye-COE90": {transform:516, soften:677, tack:732, contour:760, full:804, slump:663, upper:482, lower:371},
+  "COE-90 experimental": {transform:516, soften:677, tack:732, contour:760, full:804, slump:663, upper:482, lower:371}
+};
+const ids = ["glass","diameter","length","width","thickness","history","process","bubble","dams","oven","ceramicRate","transformHold","topHold","description"];
+const $ = id => document.getElementById(id);
+const num = id => Math.max(0, Number($(id).value) || 0);
+const round = (n,d=0) => Number(n.toFixed(d));
+const storageKey = "kilncalc-project-v1";
+
+function effectiveSize(){
+  const l=num("length"), w=num("width"), d=num("diameter");
+  if(l>0 && w>0) return round(Math.sqrt(l*l+w*w),1);
+  if(l>0) return l;
+  if(w>0) return w;
+  return d || 30;
+}
+function bubbleHold(){
+  const m=$("bubble").value.match(/(15|30|60)/);
+  return m ? Number(m[1]) : 0;
+}
+function calculate(){
+  const gd=glassData[$("glass").value];
+  const size=effectiveSize();
+  const thick=Math.max(1,num("thickness"));
+  const historyFactor=$("history").value==="2e or more heating" ? 1.20 :
+    ($("history").value==="Old fuse + New layer" ? 1.35 : 1);
+  const minutesPerMm=round(17*(1+0.08*(Math.max(size,1)-30)/10)*historyFactor,2);
+  const firstMinutes=round(thick*minutesPerMm);
+  const firstRate=firstMinutes>0 ? round((gd.transform-20)/(firstMinutes/60)) : 0;
+  const process=$("process").value;
+  const top=process==="TackFuse"?gd.tack:process==="ContourFuse"?gd.contour:
+    process==="FullFuse"?gd.full:gd.slump;
+  const effectiveThickness=(process==="FullFuse" && $("dams").value!=="N.v.t." && thick>6)?6:thick;
+  const anneal=round(firstMinutes*0.6667);
+  const annealHold=round(anneal*0.3333);
+  const bHold=bubbleHold();
+  const slow=$("bubble").value.startsWith("Slow");
+  const bubbleRate=slow?139:9999;
+  const bubbleRamp=bHold===0?0:round((gd.soften-gd.transform)/(bubbleRate/60));
+  const topRamp=round((top-(bHold===0?gd.transform:gd.soften))/10);
+  const total=(firstMinutes+bubbleRamp+bHold+topRamp+num("topHold")+anneal+annealHold)/60;
+  const finalDiameter=(process==="FullFuse" && $("dams").value==="Recalculate diameter" && thick>6)
+    ? round(size*Math.sqrt(thick/6),1):round(size,1);
+
+  $("effective").innerHTML=`${round(size,1).toFixed(1)} <span class="u">cm</span>`;
+  $("topTemp").innerHTML=`${top} <span class="u">°C</span>`;
+  $("firstRate").innerHTML=`${firstRate} <span class="u">°C/h</span>`;
+  $("firstMinutes").innerHTML=`${firstMinutes} <span class="u">min</span>`;
+  $("annealMinutes").innerHTML=`${anneal} <span class="u">min</span>`;
+  $("duration").innerHTML=`${round(total,1).toFixed(1)} <span class="u">h</span>`;
+  $("finalDiameter").innerHTML=`${finalDiameter.toFixed(1)} <span class="u">cm</span>`;
+  $("minutesPerMm").innerHTML=`${minutesPerMm.toFixed(2)} <span class="u">min</span>`;
+
+  const ceramicRate=num("ceramicRate")||300;
+  const schedule=[
+    ["Transformation",firstRate,gd.transform,num("transformHold"),"Slowly through the critical range"],
+    ["Bubble soak",bHold?bubbleRate:"Skip",bHold?gd.soften:"Skip",bHold||"Skip","Vent around softening point"],
+    ["Top temperature",process==="Slump-Ceramic"?ceramicRate:"Full",top,num("topHold"),"Fuse or slump"],
+    ["Upper anneal","Full",gd.upper,annealHold,"Controlled fast cooling"],
+    ["Lower anneal",round((gd.upper-gd.lower)/(anneal/60)),gd.lower,annealHold,"Controlled annealing range"],
+    ["Cooling",73,200,0,"Keep kiln closed"],
+    ["End","End",50,0,"Open at approximately 50 °C"]
+  ];
+  $("schedule").innerHTML=schedule.map((s,i)=>`
+    <div class="step">
+      <div class="stepno">${i+1}</div>
+      <div><h3>${s[0]}</h3><div class="metrics">
+        <span>Rate <strong>${s[1]}</strong> °C/h</span>
+        <span>Target <strong>${s[2]}</strong> °C</span>
+        <span>Hold <strong>${s[3]}</strong> min</span>
+      </div><div class="unit">${s[4]}</div></div>
+    </div>`).join("");
+  save();
+}
+function save(){
+  const data={}; ids.forEach(id=>data[id]=$(id).value);
+  localStorage.setItem(storageKey,JSON.stringify(data));
+  $("saveStatus").textContent="Saved automatically on this device.";
+}
+function load(){
+  try{
+    const data=JSON.parse(localStorage.getItem(storageKey)||"null");
+    if(data) ids.forEach(id=>{if(data[id]!==undefined)$(id).value=data[id]});
+  }catch(e){}
+}
+function reset(){
+  localStorage.removeItem(storageKey);
+  location.reload();
+}
+async function share(){
+  const text=`KilnCalc — ${$("description").value}
+Effective size: ${effectiveSize().toFixed(1)} cm
+Top temperature: ${$("topTemp").innerText}
+First heating rate: ${$("firstRate").innerText}
+Estimated duration: ${$("duration").innerText}`;
+  if(navigator.share){
+    try{await navigator.share({title:"KilnCalc result",text})}catch(e){}
+  }else{
+    await navigator.clipboard.writeText(text);
+    alert("Result copied to clipboard.");
+  }
+}
+ids.forEach(id=>$(id).addEventListener("input",calculate));
+ids.forEach(id=>$(id).addEventListener("change",calculate));
+$("resetBtn").addEventListener("click",()=>{if(confirm("Reset all values?"))reset()});
+$("printBtn").addEventListener("click",()=>window.print());
+$("shareBtn").addEventListener("click",share);
+load(); calculate();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+</script>
+</body>
+</html>

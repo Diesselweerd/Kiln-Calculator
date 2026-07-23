@@ -57,3 +57,10 @@ Expected results:
 - Anneal time: 73 minutes
 - Anneal hold: 24 minutes
 - Total estimated duration: 4.1 hours
+
+
+## Version 5.0.1
+- All unrestricted controller rates display as `999`.
+- The former `FULL` display is now `999`.
+- Schedule stages are labelled as Heating, Controlled cooling, or Natural cooling.
+- No underlying workbook calculations were changed.

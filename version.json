@@ -1,5 +1,6 @@
 {
-  "version": "5.0.0",
+  "version": "5.0.1",
   "workbookVersion": "V 22 juli 2026",
-  "released": "2026-07-22"
+  "released": "2026-07-22",
+  "notes": "Unrestricted rates display as 999; heating and cooling stages are visually labelled."
 }

@@ -144,7 +144,7 @@ export function calculateKiln(rawInput = {}) {
 
   const bubbleRate = String(input.bubbleSoak).startsWith("Slow")
     ? PARAMETERS.bubbleSlowRate
-    : 9999;
+    : 999;
 
   let bubbleHold = 0;
   if (String(input.bubbleSoak).endsWith("15 min")) bubbleHold = 15;
@@ -200,24 +200,24 @@ export function calculateKiln(rawInput = {}) {
   const schedule = [
     { number: 1, rate: firstHeatingRate, target: glass.transformation,
       hold: transformationHold, phase: "Transformation",
-      note: "Slowly through the critical range" },
+      note: "Slowly through the critical range", stageType: "heating" },
     { number: 2, rate: bubbleHold === 0 ? "Skip" : bubbleRate,
       target: bubbleHold === 0 ? "Skip" : glass.softening,
       hold: bubbleHold === 0 ? "Skip" : bubbleHold,
-      phase: "Bubble soak", note: "Vent around softening point" },
-    { number: 3, rate: input.process === "Slump-Ceramic" ? ceramicMaxRate : 9999,
+      phase: "Bubble soak", note: "Vent around softening point", stageType: "heating" },
+    { number: 3, rate: input.process === "Slump-Ceramic" ? ceramicMaxRate : 999,
       target: topTemperature, hold: topTemperatureHold,
-      phase: "Top temperature", note: "Fuse or slump" },
-    { number: 4, rate: "Full", target: glass.upperAnneal,
+      phase: "Top temperature", note: "Fuse or slump", stageType: "heating" },
+    { number: 4, rate: 999, target: glass.upperAnneal,
       hold: annealHold, phase: "Upper anneal",
-      note: "Fast controlled cooling" },
+      note: "Natural cooling at unrestricted controller rate", stageType: "natural-cooling" },
     { number: 5, rate: lowerAnnealRate, target: glass.lowerAnneal,
       hold: annealHold, phase: "Lower anneal",
-      note: "Controlled through annealing range" },
+      note: "Controlled through annealing range", stageType: "controlled-cooling" },
     { number: 6, rate: 73, target: 200, hold: 0,
-      phase: "Cooling", note: "Keep kiln closed" },
+      phase: "Cooling", note: "Keep kiln closed", stageType: "controlled-cooling" },
     { number: 7, rate: "End", target: 50, hold: 0,
-      phase: "End", note: "Open around 50 °C" }
+      phase: "End", note: "Open around 50 °C", stageType: "natural-cooling" }
   ];
 
   return {

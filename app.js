@@ -190,10 +190,17 @@ function renderWarnings(validation) {
 
 function renderSchedule(result) {
   $("scheduleBody").innerHTML = result.schedule.map(step => `
-    <article class="schedule-card">
+    <article class="schedule-card ${step.stageType || ""}">
       <div class="step-number">${step.number}</div>
       <div class="schedule-content">
-        <h3>${step.phase}</h3>
+        <div class="schedule-heading">
+          <h3>${step.phase}</h3>
+          <span class="stage-label">${
+            step.stageType === "heating" ? "Heating" :
+            step.stageType === "controlled-cooling" ? "Controlled cooling" :
+            step.stageType === "natural-cooling" ? "Natural cooling" : ""
+          }</span>
+        </div>
         <div class="schedule-metrics">
           <span><small>Rate</small><strong>${step.rate}</strong><em>°C/u</em></span>
           <span><small>Target</small><strong>${step.target}</strong><em>°C</em></span>

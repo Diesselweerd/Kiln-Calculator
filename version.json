@@ -1,6 +1,6 @@
 {
-  "version": "5.1",
+  "version": "5.1.1",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-23",
-  "notes": "Unrestricted maximum heating and natural cooling rates now both display as 9999. Underlying calculations and update behavior are unchanged."
+  "notes": "Corrects the browser title, visible app header, and installable PWA name to Version 5.1."
 }

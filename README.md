@@ -86,3 +86,11 @@ The Refresh button now also:
 - Controlled heating and cooling rates remain unchanged.
 - Underlying calculation formulas are unchanged.
 - Version checking and forced-refresh behavior from Version 5.0.2 are retained.
+
+
+## Version 5.1.1
+
+- Corrects the browser tab title to `KilnCalc 5.1`.
+- Corrects the visible app header to `KilnCalc 5.1`.
+- Corrects the installable PWA name to `KilnCalc 5.1 Glass Fusing Calculator`.
+- Keeps all Version 5.1 calculation and rate-display behavior unchanged.

@@ -64,3 +64,16 @@ Expected results:
 - The former `FULL` display is now `999`.
 - Schedule stages are labelled as Heating, Controlled cooling, or Natural cooling.
 - No underlying workbook calculations were changed.
+
+
+## Version 5.0.2 update fix
+
+Version 5.0.1 accidentally contained `APP_VERSION = 5.0.0` while
+`version.json` contained `5.0.1`. This caused the app to show the update
+banner permanently. Version 5.0.2 corrects that mismatch.
+
+The Refresh button now also:
+- requests an immediate service-worker update;
+- clears only KilnCalc caches;
+- reloads with a versioned URL;
+- reloads once when the new service worker becomes active.

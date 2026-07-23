@@ -521,7 +521,25 @@ $("projectList").addEventListener("click", event => {
   if (load) loadProject(load.dataset.load);
   if (del) deleteProject(del.dataset.delete);
 });
-$("updateButton").addEventListener("click", () => location.reload());
+$("updateButton").addEventListener("click", async () => {
+  $("updateButton").disabled = true;
+  $("updateButton").textContent = "Updating…";
+  try {
+    if ("serviceWorker" in navigator) {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration) await registration.update();
+    }
+    const cacheNames = await caches.keys();
+    await Promise.all(
+      cacheNames
+        .filter(name => name.startsWith("kilncalc-"))
+        .map(name => caches.delete(name))
+    );
+  } catch {}
+  const url = new URL(location.href);
+  url.searchParams.set("appVersion", APP_VERSION);
+  location.replace(url.toString());
+});
 
 loadSettings();
 loadCurrent();
@@ -533,5 +551,13 @@ updateHistoryButtons();
 checkVersion();
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js").catch(console.error);
+  let reloadingForUpdate = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloadingForUpdate) return;
+    reloadingForUpdate = true;
+    location.reload();
+  });
+  navigator.serviceWorker.register("./service-worker.js")
+    .then(registration => registration.update())
+    .catch(console.error);
 }

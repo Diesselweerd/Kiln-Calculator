@@ -77,3 +77,12 @@ The Refresh button now also:
 - clears only KilnCalc caches;
 - reloads with a versioned URL;
 - reloads once when the new service worker becomes active.
+
+
+## Version 5.1
+
+- Maximum unrestricted heating displays as `9999`.
+- Natural cooling, formerly shown as `FULL`, displays as `9999`.
+- Controlled heating and cooling rates remain unchanged.
+- Underlying calculation formulas are unchanged.
+- Version checking and forced-refresh behavior from Version 5.0.2 are retained.

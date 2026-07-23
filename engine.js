@@ -1,5 +1,5 @@
 
-export const APP_VERSION = "5.0.2";
+export const APP_VERSION = "5.1";
 export const WORKBOOK_VERSION = "V 22 juli 2026";
 
 export const GLASS_DATA = {
@@ -144,7 +144,7 @@ export function calculateKiln(rawInput = {}) {
 
   const bubbleRate = String(input.bubbleSoak).startsWith("Slow")
     ? PARAMETERS.bubbleSlowRate
-    : 999;
+    : 9999;
 
   let bubbleHold = 0;
   if (String(input.bubbleSoak).endsWith("15 min")) bubbleHold = 15;
@@ -205,10 +205,10 @@ export function calculateKiln(rawInput = {}) {
       target: bubbleHold === 0 ? "Skip" : glass.softening,
       hold: bubbleHold === 0 ? "Skip" : bubbleHold,
       phase: "Bubble soak", note: "Vent around softening point", stageType: "heating" },
-    { number: 3, rate: input.process === "Slump-Ceramic" ? ceramicMaxRate : 999,
+    { number: 3, rate: input.process === "Slump-Ceramic" ? ceramicMaxRate : 9999,
       target: topTemperature, hold: topTemperatureHold,
       phase: "Top temperature", note: "Fuse or slump", stageType: "heating" },
-    { number: 4, rate: 999, target: glass.upperAnneal,
+    { number: 4, rate: 9999, target: glass.upperAnneal,
       hold: annealHold, phase: "Upper anneal",
       note: "Natural cooling at unrestricted controller rate", stageType: "natural-cooling" },
     { number: 5, rate: lowerAnnealRate, target: glass.lowerAnneal,

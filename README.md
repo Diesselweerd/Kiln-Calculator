@@ -94,3 +94,12 @@ The Refresh button now also:
 - Corrects the visible app header to `KilnCalc 5.1`.
 - Corrects the installable PWA name to `KilnCalc 5.1 Glass Fusing Calculator`.
 - Keeps all Version 5.1 calculation and rate-display behavior unchanged.
+
+
+## Version 5.1.2
+- Enclosure/dams option `N.v.t.` renamed to `Not applicable`.
+- Process `Slump-Other` renamed to `Slump`.
+- Process `Slump-Ceramic` and its ceramic-only input fields removed.
+- Total estimated duration moved to the bottom of section 3, Automatic firing schedule.
+- Calculated results moved to section 4.
+- Underlying firing formulas remain unchanged.

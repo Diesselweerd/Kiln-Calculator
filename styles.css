@@ -176,3 +176,16 @@ th:first-child,td:first-child { text-align:left; }
 
 /* Version 5.0.1: clearer schedule stages */
 .schedule-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:7px}.schedule-heading h3{margin:0}.stage-label{border-radius:999px;padding:3px 8px;font-size:10px;font-weight:800;white-space:nowrap}.schedule-card.heating{border-left:5px solid #d98932}.schedule-card.heating .stage-label{background:#fff0df;color:#9a571b}.schedule-card.controlled-cooling{border-left:5px solid #3a78a8}.schedule-card.controlled-cooling .stage-label{background:#e5f0f8;color:#245b84}.schedule-card.natural-cooling{border-left:5px solid #7b8790}.schedule-card.natural-cooling .stage-label{background:#edf0f2;color:#4f5b63}
+
+
+.schedule-total-duration {
+  margin: 0 16px 16px;
+  padding: 16px;
+  border-top: 1px solid var(--border, #d9dde2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.schedule-total-duration small { font-weight: 700; }
+.schedule-total-duration strong { font-size: 1.15rem; }

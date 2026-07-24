@@ -161,7 +161,6 @@ function autoSelectShape(changedId) {
 function setConditionalInputs(input) {
   const slump = input.process.startsWith("Slump");
   const fullFuse = input.process === "FullFuse";
-  const ceramic = input.process === "Slump-Ceramic";
 
   $("bubbleSoak").disabled = slump;
   if (slump && $("bubbleSoak").value !== "No Bubble Soak") {
@@ -169,11 +168,8 @@ function setConditionalInputs(input) {
   }
 
   $("enclosure").disabled = !fullFuse;
-  if (!fullFuse) $("enclosure").value = "N.v.t.";
+  if (!fullFuse) $("enclosure").value = "Not applicable";
 
-  $("ovenType").disabled = !ceramic;
-  $("ceramicMaxRate").disabled = !ceramic;
-  $("ceramicFields").classList.toggle("inactive", !ceramic);
 }
 
 function renderWarnings(validation) {
@@ -253,7 +249,7 @@ function render(push = true) {
     $("annealTime").textContent = result.annealTime;
     $("annealHold").textContent = result.annealHold;
     $("calculatedFinalDiameter").textContent = result.calculatedFinalDiameter.toFixed(1);
-    $("totalDurationHours").textContent = result.totalDurationHours.toFixed(1);
+    $("totalDurationHours").textContent = `${result.totalDurationHours.toFixed(1)} hours`;
     $("transformationPoint").textContent = result.glass.transformation;
     $("softeningPoint").textContent = result.glass.softening;
     $("upperAnneal").textContent = result.glass.upperAnneal;

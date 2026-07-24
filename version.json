@@ -1,6 +1,6 @@
 {
-  "version": "5.1.1",
+  "version": "5.1.2",
   "workbookVersion": "V 22 juli 2026",
-  "released": "2026-07-23",
-  "notes": "Corrects the browser title, visible app header, and installable PWA name to Version 5.1."
+  "released": "2026-07-24",
+  "notes": "Simplifies Slump inputs, renames Not applicable, moves total duration below the firing schedule, and reorders sections 3 and 4."
 }

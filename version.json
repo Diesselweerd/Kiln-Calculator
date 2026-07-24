@@ -1,6 +1,6 @@
 {
-  "version": "5.1.2",
+  "version": "5.1.3",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-24",
-  "notes": "Simplifies Slump inputs, renames Not applicable, moves total duration below the firing schedule, and reorders sections 3 and 4."
+  "notes": "Restores the Automatic firing schedule by removing stale JavaScript references to deleted ceramic-process input fields."
 }

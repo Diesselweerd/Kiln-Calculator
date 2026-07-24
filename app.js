@@ -7,8 +7,8 @@ import {
 const $ = id => document.getElementById(id);
 const FIELD_IDS = [
   "shapeMode","glassType","roundDiameter","length","width","thickness",
-  "heatingHistory","process","bubbleSoak","enclosure","ovenType",
-  "ceramicMaxRate","transformationHold","topTemperatureHold","description"
+  "heatingHistory","process","bubbleSoak","enclosure",
+  "transformationHold","topTemperatureHold","description"
 ];
 
 const STATE_KEY = "kilncalc-v5-current";
@@ -27,7 +27,7 @@ const projectId = () => crypto.randomUUID?.() ||
   `p-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 function readForm() {
-  return Object.fromEntries(FIELD_IDS.map(id => [id, $(id).value]));
+  return Object.fromEntries(FIELD_IDS.filter(id => $(id)).map(id => [id, $(id).value]));
 }
 
 function normalizeForm(raw) {
@@ -38,7 +38,6 @@ function normalizeForm(raw) {
     length: Number(raw.length),
     width: Number(raw.width),
     thickness: Number(raw.thickness),
-    ceramicMaxRate: Number(raw.ceramicMaxRate),
     transformationHold: Number(raw.transformationHold),
     topTemperatureHold: Number(raw.topTemperatureHold)
   };

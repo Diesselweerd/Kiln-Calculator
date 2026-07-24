@@ -1,8 +1,7 @@
-
-const CACHE = "kilncalc-v5-1-3-20260724-2";
+const CACHE = "kilncalc-v5-1-4-20260724-1";
 const ASSETS = [
   "./","./index.html","./styles.css","./app.js","./engine.js",
-  "./manifest.webmanifest","./version.json","./icon.svg","./icon-180.png","./icon-512.png"
+  "./manifest.webmanifest","./icon.svg","./icon-180.png","./icon-512.png"
 ];
 
 self.addEventListener("install", event => {
@@ -20,13 +19,20 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  if (url.pathname.endsWith("/version.json")) {
+    event.respondWith(fetch(event.request, {cache: "no-store"}));
+    return;
+  }
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        const copy = response.clone();
-        caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        }
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request).then(hit => hit || caches.match("./index.html")))
   );
 });

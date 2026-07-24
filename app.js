@@ -7,8 +7,8 @@ import {
 const $ = id => document.getElementById(id);
 const FIELD_IDS = [
   "shapeMode","glassType","roundDiameter","length","width","thickness",
-  "heatingHistory","process","bubbleSoak","enclosure",
-  "transformationHold","topTemperatureHold","description"
+  "heatingHistory","process","bubbleSoak","enclosure","ovenType",
+  "ceramicMaxRate","transformationHold","topTemperatureHold","description"
 ];
 
 const STATE_KEY = "kilncalc-v5-current";
@@ -27,17 +27,21 @@ const projectId = () => crypto.randomUUID?.() ||
   `p-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 function readForm() {
-  return Object.fromEntries(FIELD_IDS.filter(id => $(id)).map(id => [id, $(id).value]));
+  return Object.fromEntries(FIELD_IDS.map(id => [id, $(id).value]));
 }
 
 function normalizeForm(raw) {
+  const normalizedRaw = { ...raw };
+  if (normalizedRaw.process === "Slump-Other" || normalizedRaw.process === "Slump-Ceramic") normalizedRaw.process = "Slump";
+  if (normalizedRaw.enclosure === "N.v.t." || normalizedRaw.enclosure === "n.v.t.") normalizedRaw.enclosure = "Not applicable";
   return {
     ...DEFAULT_INPUT,
-    ...raw,
+    ...normalizedRaw,
     roundDiameter: Number(raw.roundDiameter),
     length: Number(raw.length),
     width: Number(raw.width),
     thickness: Number(raw.thickness),
+    ceramicMaxRate: Number(raw.ceramicMaxRate),
     transformationHold: Number(raw.transformationHold),
     topTemperatureHold: Number(raw.topTemperatureHold)
   };
@@ -160,6 +164,7 @@ function autoSelectShape(changedId) {
 function setConditionalInputs(input) {
   const slump = input.process.startsWith("Slump");
   const fullFuse = input.process === "FullFuse";
+  const ceramic = input.process === "Slump-Ceramic";
 
   $("bubbleSoak").disabled = slump;
   if (slump && $("bubbleSoak").value !== "No Bubble Soak") {
@@ -167,8 +172,11 @@ function setConditionalInputs(input) {
   }
 
   $("enclosure").disabled = !fullFuse;
-  if (!fullFuse) $("enclosure").value = "Not applicable";
+  if (!fullFuse) $("enclosure").value = "N.v.t.";
 
+  $("ovenType").disabled = !ceramic;
+  $("ceramicMaxRate").disabled = !ceramic;
+  $("ceramicFields").classList.toggle("inactive", !ceramic);
 }
 
 function renderWarnings(validation) {
@@ -248,7 +256,7 @@ function render(push = true) {
     $("annealTime").textContent = result.annealTime;
     $("annealHold").textContent = result.annealHold;
     $("calculatedFinalDiameter").textContent = result.calculatedFinalDiameter.toFixed(1);
-    $("totalDurationHours").textContent = `${result.totalDurationHours.toFixed(1)} hours`;
+    $("totalDurationHours").textContent = result.totalDurationHours.toFixed(1);
     $("transformationPoint").textContent = result.glass.transformation;
     $("softeningPoint").textContent = result.glass.softening;
     $("upperAnneal").textContent = result.glass.upperAnneal;
@@ -474,6 +482,8 @@ async function checkVersion() {
     if (remote.version && remote.version !== APP_VERSION) {
       $("updateNotice").hidden = false;
       $("updateText").textContent = `Version ${remote.version} is available.`;
+    } else {
+      $("updateNotice").hidden = true;
     }
   } catch {}
 }
@@ -521,18 +531,16 @@ $("updateButton").addEventListener("click", async () => {
   $("updateButton").textContent = "Updating…";
   try {
     if ("serviceWorker" in navigator) {
-      const registration = await navigator.serviceWorker.getRegistration();
-      if (registration) await registration.update();
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(registration => registration.unregister()));
     }
-    const cacheNames = await caches.keys();
-    await Promise.all(
-      cacheNames
-        .filter(name => name.startsWith("kilncalc-"))
-        .map(name => caches.delete(name))
-    );
+    if ("caches" in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.filter(name => name.startsWith("kilncalc-")).map(name => caches.delete(name)));
+    }
   } catch {}
   const url = new URL(location.href);
-  url.searchParams.set("appVersion", APP_VERSION);
+  url.searchParams.set("refresh", Date.now().toString());
   location.replace(url.toString());
 });
 

@@ -11,13 +11,13 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="styles.css">
-  <title>KilnCalc 5.1.3</title>
+  <title>KilnCalc 5.1.4</title>
 </head>
 <body>
 <header class="app-header">
   <div class="header-inner">
     <div>
-      <h1>KilnCalc <span>5.1.3</span></h1>
+      <h1>KilnCalc <span>5.1.4</span></h1>
       <p>Glass fusing & slumping calculator</p>
     </div>
     <button id="newButton" class="header-button">New</button>
@@ -143,6 +143,19 @@
         </select>
       </label>
 
+      <div id="ceramicFields" class="field-group full">
+        <label>Kiln firing type
+          <select id="ovenType">
+            <option>Top-Firing</option>
+            <option>Side-Firing</option>
+          </select>
+        </label>
+
+        <label>Ceramic mold max rate <span>°C/u</span>
+          <input id="ceramicMaxRate" type="number" min="1" step="1" value="330">
+        </label>
+      </div>
+
       <label>Transformation hold <span>min</span>
         <input id="transformationHold" type="number" min="0" step="1" value="30">
       </label>
@@ -164,7 +177,9 @@
   <details class="panel" data-section="schedule" open>
     <summary><span>3</span> Automatic firing schedule</summary>
     <div class="panel-body" id="scheduleBody"></div>
-    <div class="schedule-total-duration"><small>Total estimated duration</small><strong id="totalDurationHours">4.1 hours</strong></div>
+    <div class="panel-body schedule-duration">
+      <div class="result accent"><small>Total estimated duration</small><strong id="totalDurationHours">4.1</strong><span>hours</span></div>
+    </div>
   </details>
 
   <details class="panel" data-section="results" open>

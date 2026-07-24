@@ -1,5 +1,5 @@
 
-export const APP_VERSION = "5.1.3";
+export const APP_VERSION = "5.1.4";
 export const WORKBOOK_VERSION = "V 22 juli 2026";
 
 export const GLASS_DATA = {
@@ -51,7 +51,7 @@ export const DEFAULT_INPUT = {
   heatingHistory: "1e-heating",
   process: "FullFuse",
   bubbleSoak: "No Bubble Soak",
-  enclosure: "Not applicable",
+  enclosure: "N.v.t.",
   ovenType: "Top-Firing",
   ceramicMaxRate: 330,
   transformationHold: 30,
@@ -114,7 +114,7 @@ export function calculateKiln(rawInput = {}) {
 
   const effectiveThickness =
     input.process === "FullFuse" &&
-    input.enclosure !== "Not applicable" &&
+    input.enclosure !== "N.v.t." &&
     thickness > 6 ? 6 : thickness;
 
   const historyFactor =
@@ -205,7 +205,7 @@ export function calculateKiln(rawInput = {}) {
       target: bubbleHold === 0 ? "Skip" : glass.softening,
       hold: bubbleHold === 0 ? "Skip" : bubbleHold,
       phase: "Bubble soak", note: "Vent around softening point", stageType: "heating" },
-    { number: 3, rate: 9999,
+    { number: 3, rate: input.process === "Slump-Ceramic" ? ceramicMaxRate : 9999,
       target: topTemperature, hold: topTemperatureHold,
       phase: "Top temperature", note: "Fuse or slump", stageType: "heating" },
     { number: 4, rate: 9999, target: glass.upperAnneal,
@@ -267,8 +267,12 @@ export function validateInput(rawInput = {}) {
     errors.push("Bubble soak is not compatible with slump processes because the slump temperature is below the softening point.");
   }
 
-  if (input.process !== "FullFuse" && input.enclosure !== "Not applicable") {
+  if (input.process !== "FullFuse" && input.enclosure !== "N.v.t.") {
     warnings.push("Enclosure/dams only affects FullFuse calculations.");
+  }
+
+  if (input.process === "Slump-Ceramic" && !(number(input.ceramicMaxRate) > 0)) {
+    errors.push("Ceramic maximum rate must be greater than zero.");
   }
 
   if (input.glassType === "COE-90 experimental") {

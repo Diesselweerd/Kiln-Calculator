@@ -96,19 +96,10 @@ The Refresh button now also:
 - Keeps all Version 5.1 calculation and rate-display behavior unchanged.
 
 
-## Version 5.1.2
-- Enclosure/dams option `N.v.t.` renamed to `Not applicable`.
-- Process `Slump-Other` renamed to `Slump`.
-- Process `Slump-Ceramic` and its ceramic-only input fields removed.
-- Total estimated duration moved to the bottom of section 3, Automatic firing schedule.
-- Calculated results moved to section 4.
-- Underlying firing formulas remain unchanged.
+## Version 5.1.4
 
-
-## Version 5.1.3
-
-- Restores the complete Automatic firing schedule in section 3.
-- Removes obsolete JavaScript references to the deleted Oven type and Ceramic maximum-rate fields.
-- Makes form reading defensive against missing controls.
-- Keeps Total estimated duration at the bottom of the schedule.
-- Underlying firing calculations remain unchanged.
+- Clean rebuild from working Version 5.1.1.
+- Restores the complete firing schedule.
+- Applies requested option labels and section order.
+- Moves total duration below the schedule.
+- Refresh unregisters the old service worker, clears KilnCalc caches, and reloads with a unique timestamp.

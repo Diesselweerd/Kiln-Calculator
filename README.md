@@ -103,3 +103,12 @@ The Refresh button now also:
 - Total estimated duration moved to the bottom of section 3, Automatic firing schedule.
 - Calculated results moved to section 4.
 - Underlying firing formulas remain unchanged.
+
+
+## Version 5.1.3
+
+- Restores the complete Automatic firing schedule in section 3.
+- Removes obsolete JavaScript references to the deleted Oven type and Ceramic maximum-rate fields.
+- Makes form reading defensive against missing controls.
+- Keeps Total estimated duration at the bottom of the schedule.
+- Underlying firing calculations remain unchanged.

@@ -1,6 +1,6 @@
 {
-  "version": "5.1.6",
+  "version": "5.1.7",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-25",
-  "notes": "Adds a dynamic firing schedule graph below the duration summary."
+  "notes": "Corrects graph placement, responsive width, overflow, and typography."
 }

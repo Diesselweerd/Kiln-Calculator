@@ -119,3 +119,12 @@ The Refresh button now also:
 - Adds a dynamic temperature-versus-programmed-time graph.
 - Natural cooling is dashed and excluded from programmed duration.
 - Firing calculations are unchanged.
+
+
+## Version 5.1.7
+
+- Moves the graph out of the programmed-duration result card.
+- Constrains the graph to the full available width of the display panel.
+- Removes the forced 720 px minimum width and horizontal scrollbar.
+- Reduces and responsively scales graph labels and explanatory text.
+- Keeps the firing calculations unchanged.

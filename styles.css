@@ -178,33 +178,117 @@ th:first-child,td:first-child { text-align:left; }
 .schedule-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:7px}.schedule-heading h3{margin:0}.stage-label{border-radius:999px;padding:3px 8px;font-size:10px;font-weight:800;white-space:nowrap}.schedule-card.heating{border-left:5px solid #d98932}.schedule-card.heating .stage-label{background:#fff0df;color:#9a571b}.schedule-card.controlled-cooling{border-left:5px solid #3a78a8}.schedule-card.controlled-cooling .stage-label{background:#e5f0f8;color:#245b84}.schedule-card.natural-cooling{border-left:5px solid #7b8790}.schedule-card.natural-cooling .stage-label{background:#edf0f2;color:#4f5b63}
 
 
-.schedule-duration { padding-top: 0; }
-.schedule-duration .result { max-width: 100%; }
 
 
-.schedule-duration-explanation {
-  margin-top: 10px;
-  display: grid;
-  gap: 8px;
+/* Version 5.1.7: responsive duration summary and firing graph */
+.schedule-duration {
+  min-width: 0;
+  overflow: hidden;
 }
-.schedule-duration-explanation > div,
-.schedule-duration-summary .duration-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
+.schedule-duration .duration-result {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.schedule-duration-explanation {
+  margin-top: 12px;
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+.schedule-duration-explanation > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
   align-items: baseline;
+}
+.schedule-duration-explanation span {
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 .schedule-duration-explanation p {
   margin: 0;
-  font-size: 0.92rem;
-  opacity: 0.78;
+  font-size: clamp(11px, 2.6vw, 13px);
+  line-height: 1.4;
+  opacity: .78;
 }
+.firing-graph-panel {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+}
+.firing-graph-header {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 10px;
+}
+.firing-graph-header h3 {
+  margin: 0 0 4px;
+  font-size: clamp(14px, 3.5vw, 17px);
+  line-height: 1.25;
+}
+.firing-graph-header p {
+  margin: 0;
+  max-width: 100%;
+  font-size: clamp(10px, 2.5vw, 12px);
+  line-height: 1.4;
+  opacity: .78;
+  overflow-wrap: anywhere;
+}
+.firing-graph-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.firing-graph-wrap svg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  aspect-ratio: 1000 / 520;
+  box-sizing: border-box;
+}
+.graph-bg { fill: transparent; }
+.graph-grid { stroke: currentColor; opacity: .10; stroke-width: 1; }
+.graph-axis { stroke: currentColor; opacity: .65; stroke-width: 2; }
+.graph-line { fill: none; stroke: currentColor; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+.graph-natural-line { stroke: currentColor; stroke-width: 3; stroke-dasharray: 12 10; opacity: .7; }
+.graph-point { fill: currentColor; }
+.firing-graph-wrap text { fill: currentColor; font-family: inherit; }
+.graph-tick { font-size: 12px; opacity: .72; }
+.graph-axis-label { font-size: 14px; font-weight: 700; }
+.graph-segment-label,
+.graph-natural-label { font-size: 12px; font-weight: 700; }
+.graph-hold-label { font-size: 11px; font-weight: 600; }
 
-.firing-graph-panel{margin-top:20px;padding-top:16px;border-top:1px solid var(--border,#d9dde2)}
-.firing-graph-panel h3{margin:0 0 4px}.firing-graph-panel p{margin:0 0 12px;font-size:.92rem;opacity:.78}
-.firing-graph-wrap{width:100%;overflow-x:auto}.firing-graph-wrap svg{width:100%;min-width:720px;height:auto;display:block}
-.graph-bg{fill:transparent}.graph-grid{stroke:currentColor;opacity:.1}.graph-axis{stroke:currentColor;opacity:.65;stroke-width:2}
-.graph-line{fill:none;stroke:currentColor;stroke-width:4;stroke-linejoin:round;stroke-linecap:round}
-.graph-natural-line{stroke:currentColor;stroke-width:3;stroke-dasharray:12 10;opacity:.7}.graph-point{fill:currentColor}
-.firing-graph-wrap text{fill:currentColor;font-family:inherit}.graph-tick{font-size:14px;opacity:.72}
-.graph-axis-label{font-size:16px;font-weight:700}.graph-segment-label,.graph-natural-label{font-size:14px;font-weight:700}.graph-hold-label{font-size:13px;font-weight:600}
+@media (max-width: 580px) {
+  .schedule-duration-explanation > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .schedule-duration-explanation span {
+    text-align: left;
+  }
+  .firing-graph-panel {
+    margin-top: 14px;
+    padding-top: 12px;
+  }
+  .firing-graph-wrap svg {
+    aspect-ratio: 1000 / 560;
+  }
+  .graph-tick { font-size: 11px; }
+  .graph-axis-label { font-size: 13px; }
+  .graph-segment-label,
+  .graph-natural-label { font-size: 11px; }
+  .graph-hold-label { font-size: 10px; }
+}

@@ -1,6 +1,6 @@
 {
-  "version": "5.2.4",
+  "version": "5.2.5",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-25",
-  "notes": "Removes x-axis time labels, the x-axis title and vertical time-grid lines, leaving only a straight horizontal baseline."
+  "notes": "Renames the graph annotation adjacent to the last programmed point from 'Natural cooling \u2014 duration not calculated' to 'Natural cooling'."
 }

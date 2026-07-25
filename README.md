@@ -174,3 +174,11 @@ The Refresh button now also:
 - Removes vertical time-grid lines.
 - Leaves only a straight horizontal x-axis baseline.
 - Retains all prior Bubble Soak and natural-cooling corrections.
+
+
+## Version 5.2.5
+
+- Renames the graph annotation beside the final programmed point to `Natural cooling`.
+- Removes `duration not calculated` from that adjacent annotation.
+- Retains the explanatory natural-cooling text elsewhere in the interface.
+- Retains all previous graph and Bubble Soak corrections.

@@ -806,7 +806,7 @@ function renderFiringScheduleGraph(result) {
       y: (y1 + y2) / 2 - 12,
       "text-anchor": "middle",
       class: "graph-natural-label"
-    }, "Natural cooling — duration not calculated");
+    }, "Natural cooling");
   }
 }
 

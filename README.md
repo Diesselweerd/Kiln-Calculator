@@ -146,3 +146,12 @@ The Refresh button now also:
 - Does not draw a plateau or label for an omitted bubble-soak segment.
 - Connects the previous programmed point directly to the next active segment.
 - Firing calculations and the schedule table remain unchanged.
+
+
+## Version 5.2.2
+
+- Fixes the remaining bubble-soak graph issue.
+- Reads the actual Bubble Soak input field directly.
+- When Bubble Soak is `SKIP`, step 2 is removed from the graph.
+- No step-2 point, plateau, label, or connecting vertex is drawn.
+- The schedule table and firing calculations remain unchanged.

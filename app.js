@@ -594,10 +594,19 @@ function kcHours(value) {
 }
 
 
-function isSkippedGraphStep(step) {
+
+function isSkippedGraphStep(step, index) {
   const rateText = String(step.rate ?? step.rampRate ?? "").trim().toUpperCase();
   const holdText = String(step.hold ?? step.holdTime ?? step.soak ?? "").trim().toUpperCase();
   const phaseText = String(step.phase ?? step.name ?? step.stageType ?? "").trim().toLowerCase();
+
+  const bubbleSoakControl = document.getElementById("bubbleSoak");
+  const bubbleSoakInput = String(
+    bubbleSoakControl?.value ??
+    window.currentInput?.bubbleSoak ??
+    window.currentProject?.bubbleSoak ??
+    ""
+  ).trim().toUpperCase();
 
   const explicitlySkipped =
     rateText === "SKIP" ||
@@ -605,9 +614,15 @@ function isSkippedGraphStep(step) {
     step.skip === true ||
     step.omitted === true;
 
+  const isBubbleSoakStep =
+    index === 1 ||
+    step.number === 2 ||
+    phaseText.includes("bubble");
+
   const bubbleSoakSkipped =
-    phaseText.includes("bubble") &&
+    isBubbleSoakStep &&
     (
+      bubbleSoakInput === "SKIP" ||
       explicitlySkipped ||
       holdText === "" ||
       kcHours(step.hold ?? step.holdTime ?? step.soak ?? 0) <= 0
@@ -615,6 +630,7 @@ function isSkippedGraphStep(step) {
 
   return explicitlySkipped || bubbleSoakSkipped;
 }
+
 
 function isNaturalCoolingStep(step, fromTemp, targetTemp, rate) {
   const label = String(step.phase ?? step.name ?? step.stageType ?? "").toLowerCase();
@@ -647,7 +663,7 @@ function renderFiringScheduleGraph(result) {
   const holdLabels = [];
 
   result.schedule.forEach((step, index) => {
-    if (isSkippedGraphStep(step)) return;
+    if (isSkippedGraphStep(step, index)) return;
 
     const target = kcNum(step.target ?? step.targetTemperature ?? step.temperature);
     if (target == null) return;

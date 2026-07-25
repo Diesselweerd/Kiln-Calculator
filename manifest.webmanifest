@@ -1,5 +1,5 @@
 {
-  "name": "KilnCalc 5.2.1 Glass Fusing Calculator",
+  "name": "KilnCalc 5.2.2 Glass Fusing Calculator",
   "short_name": "KilnCalc",
   "description": "Offline glass fusing and slumping calculator based on the 22 July 2026 Excel workbook.",
   "start_url": "./?source=pwa-5.1.4",

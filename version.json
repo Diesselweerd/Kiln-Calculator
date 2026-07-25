@@ -1,6 +1,6 @@
 {
-  "version": "5.2",
+  "version": "5.2.1",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-25",
-  "notes": "Corrects the graph time axis and starts natural cooling at the final programmed point."
+  "notes": "Omits skipped bubble-soak segments from the firing schedule graph. Segments marked SKIP or with zero bubble-soak hold are not plotted."
 }

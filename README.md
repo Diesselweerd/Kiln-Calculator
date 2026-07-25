@@ -137,3 +137,12 @@ The Refresh button now also:
 - Adds all hold times to the cumulative time.
 - Starts natural cooling exactly at the last programmed data point.
 - Keeps natural cooling outside the programmed duration and time axis.
+
+
+## Version 5.2.1
+
+- Omits the bubble-soak graph point when Bubble Soak is set to `SKIP`.
+- Also omits bubble-soak segments with a zero-minute hold.
+- Does not draw a plateau or label for an omitted bubble-soak segment.
+- Connects the previous programmed point directly to the next active segment.
+- Firing calculations and the schedule table remain unchanged.

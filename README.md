@@ -155,3 +155,22 @@ The Refresh button now also:
 - When Bubble Soak is `SKIP`, step 2 is removed from the graph.
 - No step-2 point, plateau, label, or connecting vertex is drawn.
 - The schedule table and firing calculations remain unchanged.
+
+
+## Version 5.2.3
+
+- Removes Bubble Soak from the graph source sequence when it is set to `SKIP`.
+- Eliminates the remaining downward connector to the skipped Bubble Soak target.
+- Connects the end of Transformation directly to the next active phase.
+- Prevents nonnumeric values such as `Skip` from being interpreted as 0 °C.
+- Displays `SKIP` as the no-bubble-soak input choice.
+- Keeps the programmed schedule calculations unchanged.
+
+
+## Version 5.2.4
+
+- Removes all x-axis time labels from the firing schedule graph.
+- Removes the `Programmed elapsed time` title.
+- Removes vertical time-grid lines.
+- Leaves only a straight horizontal x-axis baseline.
+- Retains all prior Bubble Soak and natural-cooling corrections.

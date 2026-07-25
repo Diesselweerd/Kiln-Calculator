@@ -1,6 +1,6 @@
 {
-  "version": "5.2.2",
+  "version": "5.2.4",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-25",
-  "notes": "Fixes bubble-soak graph omission by checking the actual Bubble Soak input value. Step 2 is not plotted when Bubble Soak is SKIP."
+  "notes": "Removes x-axis time labels, the x-axis title and vertical time-grid lines, leaving only a straight horizontal baseline."
 }

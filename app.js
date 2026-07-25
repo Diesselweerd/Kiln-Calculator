@@ -570,7 +570,9 @@ if ("serviceWorker" in navigator) {
 
 function kcNum(value) {
   if (typeof value === "number") return Number.isFinite(value) ? value : null;
-  const parsed = Number(String(value ?? "").replace(/[^\d.,-]/g, "").replace(",", "."));
+  const cleaned = String(value ?? "").replace(/[^\d.,-]/g, "").replace(",", ".").trim();
+  if (cleaned === "" || cleaned === "-" || cleaned === "." || cleaned === "-.") return null;
+  const parsed = Number(cleaned);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
@@ -595,50 +597,42 @@ function kcHours(value) {
 
 
 
-function isSkippedGraphStep(step, index) {
+
+function isSkippedGraphStep(step, index, bubbleSoakSelection) {
   const rateText = String(step.rate ?? step.rampRate ?? "").trim().toUpperCase();
+  const targetText = String(step.target ?? step.targetTemperature ?? step.temperature ?? "").trim().toUpperCase();
   const holdText = String(step.hold ?? step.holdTime ?? step.soak ?? "").trim().toUpperCase();
   const phaseText = String(step.phase ?? step.name ?? step.stageType ?? "").trim().toLowerCase();
-
-  const bubbleSoakControl = document.getElementById("bubbleSoak");
-  const bubbleSoakInput = String(
-    bubbleSoakControl?.value ??
-    window.currentInput?.bubbleSoak ??
-    window.currentProject?.bubbleSoak ??
-    ""
-  ).trim().toUpperCase();
+  const selection = String(bubbleSoakSelection ?? "").trim().toUpperCase();
 
   const explicitlySkipped =
     rateText === "SKIP" ||
+    targetText === "SKIP" ||
     holdText === "SKIP" ||
     step.skip === true ||
     step.omitted === true;
 
   const isBubbleSoakStep =
-    index === 1 ||
-    step.number === 2 ||
-    phaseText.includes("bubble");
+    Number(step.number) === 2 ||
+    phaseText.includes("bubble soak") ||
+    phaseText === "bubble";
 
-  const bubbleSoakSkipped =
-    isBubbleSoakStep &&
-    (
-      bubbleSoakInput === "SKIP" ||
-      explicitlySkipped ||
-      holdText === "" ||
-      kcHours(step.hold ?? step.holdTime ?? step.soak ?? 0) <= 0
-    );
+  const bubbleSoakDisabled =
+    selection === "SKIP" ||
+    selection === "NO BUBBLE SOAK" ||
+    selection === "";
 
-  return explicitlySkipped || bubbleSoakSkipped;
+  return explicitlySkipped || (isBubbleSoakStep && bubbleSoakDisabled);
 }
 
 
+
 function isNaturalCoolingStep(step, fromTemp, targetTemp, rate) {
-  const label = String(step.phase ?? step.name ?? step.stageType ?? "").toLowerCase();
+  const phase = String(step.phase ?? step.name ?? "").trim().toLowerCase();
   return targetTemp < fromTemp && (
-    step.stageType === "natural-cooling" ||
-    label.includes("natural cooling") ||
-    label.includes("natural") ||
-    rate >= 9999
+    phase === "end" ||
+    phase.includes("final natural cooling") ||
+    step.isFinalNaturalCooling === true
   );
 }
 
@@ -658,12 +652,24 @@ function renderFiringScheduleGraph(result) {
   let currentTemp = startTemperature;
   let naturalCooling = null;
 
+  const bubbleSoakSelection =
+    document.getElementById("bubbleSoak")?.value ??
+    result.input?.bubbleSoak ??
+    "";
+
+  // Remove skipped Bubble Soak from the source sequence before generating
+  // any points. This guarantees that no residual line can connect to its
+  // skipped target temperature.
+  const activeSchedule = result.schedule.filter(
+    (step, index) => !isSkippedGraphStep(step, index, bubbleSoakSelection)
+  );
+
   const points = [{ t: 0, temp: startTemperature, kind: "start" }];
   const rampLabels = [];
   const holdLabels = [];
 
-  result.schedule.forEach((step, index) => {
-    if (isSkippedGraphStep(step, index)) return;
+  activeSchedule.forEach((step, activeIndex) => {
+    const index = result.schedule.indexOf(step);
 
     const target = kcNum(step.target ?? step.targetTemperature ?? step.temperature);
     if (target == null) return;
@@ -750,24 +756,10 @@ function renderFiringScheduleGraph(result) {
     add("text", { x: margin.left - 12, y: yy + 4, "text-anchor": "end", class: "graph-tick" }, `${Math.round(temp)}°`);
   }
 
-  for (let i = 0; i <= 6; i++) {
-    const time = programmedEnd * i / 6;
-    const xx = x(time);
-    add("line", { x1: xx, y1: margin.top, x2: xx, y2: H - margin.bottom, class: "graph-grid" });
-    add("text", { x: xx, y: H - margin.bottom + 28, "text-anchor": "middle", class: "graph-tick" }, `${time.toFixed(time < 10 ? 1 : 0)} h`);
-  }
-
   add("line", { x1: margin.left, y1: margin.top, x2: margin.left, y2: H - margin.bottom, class: "graph-axis" });
   add("line", { x1: margin.left, y1: H - margin.bottom, x2: x(programmedEnd), y2: H - margin.bottom, class: "graph-axis" });
 
   add("text", { x: 20, y: 27, class: "graph-axis-label" }, "Temperature (°C)");
-  add("text", {
-    x: (margin.left + x(programmedEnd)) / 2,
-    y: H - 20,
-    "text-anchor": "middle",
-    class: "graph-axis-label"
-  }, "Programmed elapsed time");
-
   add("path", {
     d: points.map((point, index) => `${index === 0 ? "M" : "L"} ${x(point.t)} ${y(point.temp)}`).join(" "),
     class: "graph-line"

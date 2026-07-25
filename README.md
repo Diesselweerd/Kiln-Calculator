@@ -182,3 +182,11 @@ The Refresh button now also:
 - Removes `duration not calculated` from that adjacent annotation.
 - Retains the explanatory natural-cooling text elsewhere in the interface.
 - Retains all previous graph and Bubble Soak corrections.
+
+
+## Version 5.2.6
+
+- Changes the Diagonal explanatory text under `Shapes and dimensions`.
+- Old: `Rounded to one decimal, as in Excel.`
+- New: `Rounded to one decimal.`
+- Retains all previous graph, Bubble Soak and natural-cooling corrections.

@@ -1,6 +1,6 @@
 {
-  "version": "5.2.5",
+  "version": "5.2.6",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-25",
-  "notes": "Renames the graph annotation adjacent to the last programmed point from 'Natural cooling \u2014 duration not calculated' to 'Natural cooling'."
+  "notes": "Changes the Diagonal help text under Shapes and dimensions from 'Rounded to one decimal, as in Excel.' to 'Rounded to one decimal.'."
 }

@@ -180,3 +180,31 @@ th:first-child,td:first-child { text-align:left; }
 
 .schedule-duration { padding-top: 0; }
 .schedule-duration .result { max-width: 100%; }
+
+
+.schedule-duration-explanation {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+.schedule-duration-explanation > div,
+.schedule-duration-summary .duration-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+}
+.schedule-duration-explanation p {
+  margin: 0;
+  font-size: 0.92rem;
+  opacity: 0.78;
+}
+
+.firing-graph-panel{margin-top:20px;padding-top:16px;border-top:1px solid var(--border,#d9dde2)}
+.firing-graph-panel h3{margin:0 0 4px}.firing-graph-panel p{margin:0 0 12px;font-size:.92rem;opacity:.78}
+.firing-graph-wrap{width:100%;overflow-x:auto}.firing-graph-wrap svg{width:100%;min-width:720px;height:auto;display:block}
+.graph-bg{fill:transparent}.graph-grid{stroke:currentColor;opacity:.1}.graph-axis{stroke:currentColor;opacity:.65;stroke-width:2}
+.graph-line{fill:none;stroke:currentColor;stroke-width:4;stroke-linejoin:round;stroke-linecap:round}
+.graph-natural-line{stroke:currentColor;stroke-width:3;stroke-dasharray:12 10;opacity:.7}.graph-point{fill:currentColor}
+.firing-graph-wrap text{fill:currentColor;font-family:inherit}.graph-tick{font-size:14px;opacity:.72}
+.graph-axis-label{font-size:16px;font-weight:700}.graph-segment-label,.graph-natural-label{font-size:14px;font-weight:700}.graph-hold-label{font-size:13px;font-weight:600}

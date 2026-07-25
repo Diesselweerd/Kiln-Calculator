@@ -103,3 +103,19 @@ The Refresh button now also:
 - Applies requested option labels and section order.
 - Moves total duration below the schedule.
 - Refresh unregisters the old service worker, clears KilnCalc caches, and reloads with a unique timestamp.
+
+
+## Version 5.1.5
+
+- Renames “Total estimated duration” to “Programmed duration”.
+- States clearly that natural cooling is not included.
+- Adds an explanation that natural cooling depends on kiln, load, insulation, and ambient temperature.
+- Shows expected completion as programmed duration plus natural cooling.
+- Firing calculations remain unchanged.
+
+
+## Version 5.1.6
+
+- Adds a dynamic temperature-versus-programmed-time graph.
+- Natural cooling is dashed and excluded from programmed duration.
+- Firing calculations are unchanged.

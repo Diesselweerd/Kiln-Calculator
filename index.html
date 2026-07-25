@@ -11,13 +11,13 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="styles.css">
-  <title>KilnCalc 5.1.4</title>
+  <title>KilnCalc 5.1.6</title>
 </head>
 <body>
 <header class="app-header">
   <div class="header-inner">
     <div>
-      <h1>KilnCalc <span>5.1.4</span></h1>
+      <h1>KilnCalc <span>5.1.6</span></h1>
       <p>Glass fusing & slumping calculator</p>
     </div>
     <button id="newButton" class="header-button">New</button>
@@ -178,7 +178,20 @@
     <summary><span>3</span> Automatic firing schedule</summary>
     <div class="panel-body" id="scheduleBody"></div>
     <div class="panel-body schedule-duration">
-      <div class="result accent"><small>Total estimated duration</small><strong id="totalDurationHours">4.1</strong><span>hours</span></div>
+      <div class="result accent"><small>Programmed duration</small><strong id="totalDurationHours">4.1</strong>
+<div class="schedule-duration-explanation">
+  <div><strong>Natural cooling</strong><span>Not included</span></div>
+  <p>Natural cooling time depends on the kiln, load, insulation and ambient temperature.</p>
+  <div><strong>Expected completion</strong><span>Programmed duration + natural cooling</span></div>
+<div class="firing-graph-panel">
+  <h3>Firing schedule graph</h3>
+  <p>Natural cooling is shown as a dashed illustrative line and is not included in programmed duration.</p>
+  <div class="firing-graph-wrap">
+    <svg id="firingScheduleGraph" viewBox="0 0 1000 520" role="img"
+      aria-label="Temperature versus programmed time firing schedule graph"></svg>
+  </div>
+</div>
+</div><span>hours</span></div>
     </div>
   </details>
 

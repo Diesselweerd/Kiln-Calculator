@@ -1,6 +1,6 @@
 {
-  "version": "5.1.4",
+  "version": "5.1.6",
   "workbookVersion": "V 22 juli 2026",
-  "released": "2026-07-24",
-  "notes": "Rebuilt from working 5.1.1. Restores schedule, applies requested labels/order, and guarantees cache-clearing version refresh."
+  "released": "2026-07-25",
+  "notes": "Adds a dynamic firing schedule graph below the duration summary."
 }

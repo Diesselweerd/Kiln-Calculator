@@ -128,3 +128,12 @@ The Refresh button now also:
 - Removes the forced 720 px minimum width and horizontal scrollbar.
 - Reduces and responsively scales graph labels and explanatory text.
 - Keeps the firing calculations unchanged.
+
+
+## Version 5.2
+
+- Corrects the horizontal axis to use true cumulative programmed time.
+- Calculates ramp time from temperature difference divided by ramp rate.
+- Adds all hold times to the cumulative time.
+- Starts natural cooling exactly at the last programmed data point.
+- Keeps natural cooling outside the programmed duration and time axis.

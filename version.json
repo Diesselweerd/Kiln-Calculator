@@ -1,6 +1,6 @@
 {
-  "version": "5.1.7",
+  "version": "5.2",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-25",
-  "notes": "Corrects graph placement, responsive width, overflow, and typography."
+  "notes": "Corrects the graph time axis and starts natural cooling at the final programmed point."
 }

@@ -567,36 +567,213 @@ if ("serviceWorker" in navigator) {
 }
 
 
-function kcNum(v){if(typeof v==="number")return v;const n=Number(String(v??"").replace(/[^\d.,-]/g,"").replace(",","."));return Number.isFinite(n)?n:null}
-function kcHours(v){if(typeof v==="number")return v;const s=String(v??"").toLowerCase();const c=s.match(/^(\d+):(\d{1,2})$/);if(c)return +c[1]+(+c[2]/60);let h=0,m=s.match(/([\d.,]+)\s*h/),n=s.match(/([\d.,]+)\s*(?:m|min)/);if(m)h+=+m[1].replace(",",".");if(n)h+=+n[1].replace(",",".")/60;return h}
-function renderFiringScheduleGraph(result){
- const svg=document.getElementById("firingScheduleGraph");
- if(!svg||!result||!Array.isArray(result.schedule)||!result.schedule.length)return;
- const NS="http://www.w3.org/2000/svg",W=1000,H=520,M={l:90,r:40,t:40,b:80};
- const pw=W-M.l-M.r,ph=H-M.t-M.b,start=kcNum(result.startTemperature??result.ambientTemperature)??20;
- let t=0,temp=start,natural=null,pts=[{t:0,temp:start}],holds=[];
- result.schedule.forEach((s,i)=>{
-   const target=kcNum(s.target??s.targetTemperature??s.temperature)??temp;
-   const rate=kcNum(s.rate??s.rampRate);
-   const hold=kcHours(s.hold??s.holdTime??s.soak);
-   const nat=rate>=9999&&target<temp&&(/natural|cool/i.test(String(s.phase??s.name??""))||s.stageType==="natural-cooling");
-   if(nat){natural={t,temp,target};return}
-   if(rate&&rate>0&&target!==temp){t+=Math.abs(target-temp)/rate;pts.push({t,temp:target,s,i})}
-   if(hold>0){let a=t;t+=hold;pts.push({t,temp:target,s,i});holds.push({a,b:t,temp,text:String(s.hold??s.holdTime??s.soak)})}
-   temp=target;
- });
- const temps=pts.map(p=>p.temp).concat(natural?[natural.target]:[]);
- const ymin=Math.max(0,Math.min(...temps)-50),ymax=Math.max(...temps)+50,pend=Math.max(t,.1),gend=natural?pend/.82:pend;
- const x=q=>M.l+q/gend*pw,y=q=>M.t+(ymax-q)/(ymax-ymin)*ph;
- svg.innerHTML="";
- const add=(tag,a={},txt="")=>{const e=document.createElementNS(NS,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(txt)e.textContent=txt;svg.appendChild(e);return e};
- add("rect",{x:0,y:0,width:W,height:H,class:"graph-bg"});
- for(let i=0;i<=6;i++){let q=ymin+(ymax-ymin)*i/6,yy=y(q);add("line",{x1:M.l,y1:yy,x2:W-M.r,y2:yy,class:"graph-grid"});add("text",{x:M.l-14,y:yy+5,"text-anchor":"end",class:"graph-tick"},`${Math.round(q)}°`)}
- for(let i=0;i<=6;i++){let q=pend*i/6,xx=x(q);add("line",{x1:xx,y1:M.t,x2:xx,y2:H-M.b,class:"graph-grid"});add("text",{x:xx,y:H-M.b+28,"text-anchor":"middle",class:"graph-tick"},`${q.toFixed(q<10?1:0)} h`)}
- add("line",{x1:M.l,y1:M.t,x2:M.l,y2:H-M.b,class:"graph-axis"});add("line",{x1:M.l,y1:H-M.b,x2:W-M.r,y2:H-M.b,class:"graph-axis"});
- add("text",{x:24,y:28,class:"graph-axis-label"},"Temperature (°C)");add("text",{x:W/2,y:H-22,"text-anchor":"middle",class:"graph-axis-label"},"Programmed elapsed time");
- add("path",{d:pts.map((p,i)=>`${i?"L":"M"} ${x(p.t)} ${y(p.temp)}`).join(" "),class:"graph-line"});
- pts.slice(1).forEach(p=>{add("circle",{cx:x(p.t),cy:y(p.temp),r:4,class:"graph-point"});add("text",{x:x(p.t)+8,y:y(p.temp)-10,class:"graph-segment-label"},String(p.s?.number??p.i+1))});
- holds.forEach(h=>add("text",{x:(x(h.a)+x(h.b))/2,y:y(h.temp)-16,"text-anchor":"middle",class:"graph-hold-label"},h.text));
- if(natural){add("line",{x1:x(pend),y1:y(natural.temp),x2:W-M.r,y2:y(natural.target),class:"graph-natural-line"});add("text",{x:(x(pend)+W-M.r)/2,y:(y(natural.temp)+y(natural.target))/2-12,"text-anchor":"middle",class:"graph-natural-label"},"Natural cooling — duration not calculated")}
+
+function kcNum(value) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : null;
+  const parsed = Number(String(value ?? "").replace(/[^\d.,-]/g, "").replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : null;
 }
+
+function kcHours(value) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  const text = String(value ?? "").trim().toLowerCase();
+  const colon = text.match(/^(\d+):(\d{1,2})$/);
+  if (colon) return Number(colon[1]) + Number(colon[2]) / 60;
+
+  let hours = 0;
+  const h = text.match(/([\d.,]+)\s*(?:h|hr|hrs|hour|hours)/);
+  const m = text.match(/([\d.,]+)\s*(?:m|min|mins|minute|minutes)/);
+  if (h) hours += Number(h[1].replace(",", "."));
+  if (m) hours += Number(m[1].replace(",", ".")) / 60;
+
+  if (!h && !m) {
+    const numeric = Number(text.replace(",", "."));
+    if (Number.isFinite(numeric)) return numeric;
+  }
+  return Number.isFinite(hours) ? hours : 0;
+}
+
+function isNaturalCoolingStep(step, fromTemp, targetTemp, rate) {
+  const label = String(step.phase ?? step.name ?? step.stageType ?? "").toLowerCase();
+  return targetTemp < fromTemp && (
+    step.stageType === "natural-cooling" ||
+    label.includes("natural cooling") ||
+    label.includes("natural") ||
+    rate >= 9999
+  );
+}
+
+function renderFiringScheduleGraph(result) {
+  const svg = document.getElementById("firingScheduleGraph");
+  if (!svg || !result || !Array.isArray(result.schedule) || result.schedule.length === 0) return;
+
+  const NS = "http://www.w3.org/2000/svg";
+  const W = 1000;
+  const H = 520;
+  const margin = { left: 88, right: 42, top: 42, bottom: 82 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+
+  const startTemperature = kcNum(result.startTemperature ?? result.ambientTemperature) ?? 20;
+  let elapsed = 0;
+  let currentTemp = startTemperature;
+  let naturalCooling = null;
+
+  const points = [{ t: 0, temp: startTemperature, kind: "start" }];
+  const rampLabels = [];
+  const holdLabels = [];
+
+  result.schedule.forEach((step, index) => {
+    const target = kcNum(step.target ?? step.targetTemperature ?? step.temperature);
+    if (target == null) return;
+
+    const rate = kcNum(step.rate ?? step.rampRate);
+    const holdHours = kcHours(step.hold ?? step.holdTime ?? step.soak ?? 0);
+    const stepNumber = step.number ?? index + 1;
+
+    if (isNaturalCoolingStep(step, currentTemp, target, rate ?? 0)) {
+      naturalCooling = {
+        startTime: elapsed,
+        startTemp: currentTemp,
+        targetTemp: target,
+        stepNumber
+      };
+      return;
+    }
+
+    const rampStartTime = elapsed;
+    const rampStartTemp = currentTemp;
+
+    if (rate != null && rate > 0 && target !== currentTemp) {
+      const rampHours = Math.abs(target - currentTemp) / rate;
+      elapsed += rampHours;
+      points.push({ t: elapsed, temp: target, kind: "ramp", stepNumber });
+      rampLabels.push({
+        t1: rampStartTime,
+        t2: elapsed,
+        temp1: rampStartTemp,
+        temp2: target,
+        text: String(step.rate ?? step.rampRate ?? "")
+      });
+    } else if (target !== currentTemp) {
+      points.push({ t: elapsed, temp: target, kind: "transition", stepNumber });
+    }
+
+    if (holdHours > 0) {
+      const holdStart = elapsed;
+      elapsed += holdHours;
+      points.push({ t: elapsed, temp: target, kind: "hold", stepNumber });
+      holdLabels.push({
+        t1: holdStart,
+        t2: elapsed,
+        temp: target,
+        text: String(step.hold ?? step.holdTime ?? step.soak)
+      });
+    }
+
+    currentTemp = target;
+  });
+
+  const programmedEnd = Math.max(elapsed, 0.01);
+  const naturalExtensionHours = naturalCooling ? Math.max(programmedEnd * 0.18, 1) : 0;
+  const displayEnd = programmedEnd + naturalExtensionHours;
+
+  const allTemps = points.map(point => point.temp);
+  if (naturalCooling) allTemps.push(naturalCooling.targetTemp);
+
+  const rawMin = Math.min(...allTemps, 0);
+  const rawMax = Math.max(...allTemps, 100);
+  const padding = Math.max(40, (rawMax - rawMin) * 0.08);
+  const yMin = Math.max(0, rawMin - padding);
+  const yMax = rawMax + padding;
+
+  const x = time => margin.left + (time / displayEnd) * plotW;
+  const y = temp => margin.top + ((yMax - temp) / (yMax - yMin)) * plotH;
+
+  svg.innerHTML = "";
+
+  function add(tag, attrs = {}, text = "") {
+    const element = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, String(value)));
+    if (text) element.textContent = text;
+    svg.appendChild(element);
+    return element;
+  }
+
+  add("rect", { x: 0, y: 0, width: W, height: H, class: "graph-bg" });
+
+  for (let i = 0; i <= 6; i++) {
+    const temp = yMin + ((yMax - yMin) * i / 6);
+    const yy = y(temp);
+    add("line", { x1: margin.left, y1: yy, x2: W - margin.right, y2: yy, class: "graph-grid" });
+    add("text", { x: margin.left - 12, y: yy + 4, "text-anchor": "end", class: "graph-tick" }, `${Math.round(temp)}°`);
+  }
+
+  for (let i = 0; i <= 6; i++) {
+    const time = programmedEnd * i / 6;
+    const xx = x(time);
+    add("line", { x1: xx, y1: margin.top, x2: xx, y2: H - margin.bottom, class: "graph-grid" });
+    add("text", { x: xx, y: H - margin.bottom + 28, "text-anchor": "middle", class: "graph-tick" }, `${time.toFixed(time < 10 ? 1 : 0)} h`);
+  }
+
+  add("line", { x1: margin.left, y1: margin.top, x2: margin.left, y2: H - margin.bottom, class: "graph-axis" });
+  add("line", { x1: margin.left, y1: H - margin.bottom, x2: x(programmedEnd), y2: H - margin.bottom, class: "graph-axis" });
+
+  add("text", { x: 20, y: 27, class: "graph-axis-label" }, "Temperature (°C)");
+  add("text", {
+    x: (margin.left + x(programmedEnd)) / 2,
+    y: H - 20,
+    "text-anchor": "middle",
+    class: "graph-axis-label"
+  }, "Programmed elapsed time");
+
+  add("path", {
+    d: points.map((point, index) => `${index === 0 ? "M" : "L"} ${x(point.t)} ${y(point.temp)}`).join(" "),
+    class: "graph-line"
+  });
+
+  points.slice(1).forEach(point => {
+    add("circle", { cx: x(point.t), cy: y(point.temp), r: 4, class: "graph-point" });
+    add("text", {
+      x: x(point.t) + 8,
+      y: y(point.temp) - 10,
+      class: "graph-segment-label"
+    }, String(point.stepNumber));
+  });
+
+  holdLabels.forEach(label => {
+    add("text", {
+      x: (x(label.t1) + x(label.t2)) / 2,
+      y: y(label.temp) - 15,
+      "text-anchor": "middle",
+      class: "graph-hold-label"
+    }, label.text);
+  });
+
+  rampLabels.forEach(label => {
+    if (!label.text) return;
+    add("text", {
+      x: (x(label.t1) + x(label.t2)) / 2,
+      y: (y(label.temp1) + y(label.temp2)) / 2 - 8,
+      "text-anchor": "middle",
+      class: "graph-rate-label"
+    }, label.text);
+  });
+
+  if (naturalCooling) {
+    const x1 = x(programmedEnd);
+    const y1 = y(naturalCooling.startTemp);
+    const x2 = x(displayEnd);
+    const y2 = y(naturalCooling.targetTemp);
+
+    add("line", { x1, y1, x2, y2, class: "graph-natural-line" });
+    add("circle", { cx: x1, cy: y1, r: 4, class: "graph-point" });
+    add("text", {
+      x: (x1 + x2) / 2,
+      y: (y1 + y2) / 2 - 12,
+      "text-anchor": "middle",
+      class: "graph-natural-label"
+    }, "Natural cooling — duration not calculated");
+  }
+}
+

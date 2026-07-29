@@ -11,13 +11,13 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="styles.css">
-  <title>KilnCalc 5.3.0</title>
+  <title>KilnCalc 5.3.2</title>
 </head>
 <body>
 <header class="app-header">
   <div class="header-inner">
     <div>
-      <h1>KilnCalc <span>5.3.0</span></h1>
+      <h1>KilnCalc <span>5.3.2</span></h1>
       <p>Glass fusing & slumping calculator</p>
     </div>
     <button id="newButton" class="header-button">New</button>
@@ -46,8 +46,8 @@
       </label>
       <label class="theme-control">Temperature
         <select id="temperatureUnit">
-          <option value="C">Celsius (°C)</option>
-          <option value="F">Fahrenheit (°F)</option>
+          <option value="C">Celsius</option>
+          <option value="F">Fahrenheit</option>
         </select>
       </label>
     </div>
@@ -114,9 +114,9 @@
 
       <label>Heating history
         <select id="heatingHistory">
-          <option>1e-heating</option>
-          <option>2e or more heating</option>
-          <option>Old fuse + New layer</option>
+          <option value="1e-heating">1st heating</option>
+          <option>2nd or additional heating</option>
+          <option>New layer to existing fuse</option>
         </select>
       </label>
 

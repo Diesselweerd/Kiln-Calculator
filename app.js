@@ -40,11 +40,28 @@ function formatConverted(value, digits = 1) {
 }
 
 function displayTemperature(value) {
-  return temperatureUnit() === "F" ? formatConverted(cToF(value), 1) : String(value);
+  const text = String(value ?? "").trim();
+  const upper = text.toUpperCase();
+  if (upper === "SKIP") return "Skip";
+  if (upper === "END") return "End";
+  const numeric = Number(text);
+  if (!Number.isFinite(numeric)) return text;
+  return temperatureUnit() === "F"
+    ? formatConverted(cToF(numeric), 1)
+    : String(value);
 }
 
 function displayRate(value) {
-  return temperatureUnit() === "F" ? formatConverted(cRateToF(value), 1) : String(value);
+  const text = String(value ?? "").trim();
+  const upper = text.toUpperCase();
+  if (upper === "SKIP") return "Skip";
+  if (upper === "END") return "End";
+  const numeric = Number(text);
+  if (!Number.isFinite(numeric)) return text;
+  if (numeric === 9999) return "9999";
+  return temperatureUnit() === "F"
+    ? formatConverted(cRateToF(numeric), 1)
+    : String(value);
 }
 
 function displayTempUnit() {
@@ -257,8 +274,8 @@ function renderSchedule(result) {
           }</span>
         </div>
         <div class="schedule-metrics">
-          <span><small>Rate</small><strong>${displayRate(step.rate)}</strong><em>${displayRateUnit()}</em></span>
-          <span><small>Target</small><strong>${displayTemperature(step.target)}</strong><em>${displayTempUnit()}</em></span>
+          <span><small>Rate</small><strong>${displayRate(step.rate)}</strong><em>${Number.isFinite(Number(step.rate)) ? displayRateUnit() : ""}</em></span>
+          <span><small>Target</small><strong>${displayTemperature(step.target)}</strong><em>${Number.isFinite(Number(step.target)) ? displayTempUnit() : ""}</em></span>
           <span><small>Hold</small><strong>${step.hold}</strong><em>min</em></span>
         </div>
         <p>${convertTemperatureText(step.note)}</p>

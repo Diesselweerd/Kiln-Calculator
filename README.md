@@ -202,3 +202,19 @@ The Refresh button now also:
 - Fahrenheit rate input is converted back to Celsius internally before calculation.
 - Schedule cards, calculated results, comparison table and firing graph use the selected unit.
 - All calculations remain based on the original Celsius engine.
+
+
+## Version 5.3.1
+
+- Visible Heating history choice renamed to `1st heating`.
+- Bubble Soak `SKIP` displays `Skip` for Rate and Target in Fahrenheit mode.
+- Rate sentinel `9999` remains `9999` in Fahrenheit mode.
+- End-phase Rate value `End` remains `End` in Fahrenheit mode.
+
+
+## Version 5.3.2
+
+- Renames `2e or more heating` to `2nd or additional heating`.
+- Renames `Old fuse + New layer` to `New layer to existing fuse`.
+- Simplifies the temperature selector labels to `Celsius` and `Fahrenheit`.
+- Preserves the existing internal values for saved-project compatibility.

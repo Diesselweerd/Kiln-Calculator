@@ -96,19 +96,142 @@ The Refresh button now also:
 - Keeps all Version 5.1 calculation and rate-display behavior unchanged.
 
 
-## Version 5.1.2
-- Enclosure/dams option `N.v.t.` renamed to `Not applicable`.
-- Process `Slump-Other` renamed to `Slump`.
-- Process `Slump-Ceramic` and its ceramic-only input fields removed.
-- Total estimated duration moved to the bottom of section 3, Automatic firing schedule.
-- Calculated results moved to section 4.
-- Underlying firing formulas remain unchanged.
+## Version 5.1.4
+
+- Clean rebuild from working Version 5.1.1.
+- Restores the complete firing schedule.
+- Applies requested option labels and section order.
+- Moves total duration below the schedule.
+- Refresh unregisters the old service worker, clears KilnCalc caches, and reloads with a unique timestamp.
 
 
-## Version 5.1.3
+## Version 5.1.5
 
-- Restores the complete Automatic firing schedule in section 3.
-- Removes obsolete JavaScript references to the deleted Oven type and Ceramic maximum-rate fields.
-- Makes form reading defensive against missing controls.
-- Keeps Total estimated duration at the bottom of the schedule.
-- Underlying firing calculations remain unchanged.
+- Renames “Total estimated duration” to “Programmed duration”.
+- States clearly that natural cooling is not included.
+- Adds an explanation that natural cooling depends on kiln, load, insulation, and ambient temperature.
+- Shows expected completion as programmed duration plus natural cooling.
+- Firing calculations remain unchanged.
+
+
+## Version 5.1.6
+
+- Adds a dynamic temperature-versus-programmed-time graph.
+- Natural cooling is dashed and excluded from programmed duration.
+- Firing calculations are unchanged.
+
+
+## Version 5.1.7
+
+- Moves the graph out of the programmed-duration result card.
+- Constrains the graph to the full available width of the display panel.
+- Removes the forced 720 px minimum width and horizontal scrollbar.
+- Reduces and responsively scales graph labels and explanatory text.
+- Keeps the firing calculations unchanged.
+
+
+## Version 5.2
+
+- Corrects the horizontal axis to use true cumulative programmed time.
+- Calculates ramp time from temperature difference divided by ramp rate.
+- Adds all hold times to the cumulative time.
+- Starts natural cooling exactly at the last programmed data point.
+- Keeps natural cooling outside the programmed duration and time axis.
+
+
+## Version 5.2.1
+
+- Omits the bubble-soak graph point when Bubble Soak is set to `SKIP`.
+- Also omits bubble-soak segments with a zero-minute hold.
+- Does not draw a plateau or label for an omitted bubble-soak segment.
+- Connects the previous programmed point directly to the next active segment.
+- Firing calculations and the schedule table remain unchanged.
+
+
+## Version 5.2.2
+
+- Fixes the remaining bubble-soak graph issue.
+- Reads the actual Bubble Soak input field directly.
+- When Bubble Soak is `SKIP`, step 2 is removed from the graph.
+- No step-2 point, plateau, label, or connecting vertex is drawn.
+- The schedule table and firing calculations remain unchanged.
+
+
+## Version 5.2.3
+
+- Removes Bubble Soak from the graph source sequence when it is set to `SKIP`.
+- Eliminates the remaining downward connector to the skipped Bubble Soak target.
+- Connects the end of Transformation directly to the next active phase.
+- Prevents nonnumeric values such as `Skip` from being interpreted as 0 °C.
+- Displays `SKIP` as the no-bubble-soak input choice.
+- Keeps the programmed schedule calculations unchanged.
+
+
+## Version 5.2.4
+
+- Removes all x-axis time labels from the firing schedule graph.
+- Removes the `Programmed elapsed time` title.
+- Removes vertical time-grid lines.
+- Leaves only a straight horizontal x-axis baseline.
+- Retains all prior Bubble Soak and natural-cooling corrections.
+
+
+## Version 5.2.5
+
+- Renames the graph annotation beside the final programmed point to `Natural cooling`.
+- Removes `duration not calculated` from that adjacent annotation.
+- Retains the explanatory natural-cooling text elsewhere in the interface.
+- Retains all previous graph and Bubble Soak corrections.
+
+
+## Version 5.2.6
+
+- Changes the Diagonal explanatory text under `Shapes and dimensions`.
+- Old: `Rounded to one decimal, as in Excel.`
+- New: `Rounded to one decimal.`
+- Retains all previous graph, Bubble Soak and natural-cooling corrections.
+
+
+## Version 5.3.0
+
+- Adds a `Celsius (°C)` / `Fahrenheit (°F)` selector.
+- Celsius mode is unchanged from version 5.2.6.
+- Fahrenheit temperatures are displayed using `Tf = (Tc × 1.8) + 32`.
+- Fahrenheit rates are displayed using `Tf = Tc × 1.8`.
+- The ceramic-mould maximum-rate input accepts the selected rate unit.
+- Fahrenheit rate input is converted back to Celsius internally before calculation.
+- Schedule cards, calculated results, comparison table and firing graph use the selected unit.
+- All calculations remain based on the original Celsius engine.
+
+
+## Version 5.3.1
+
+- Visible Heating history choice renamed to `1st heating`.
+- Bubble Soak `SKIP` displays `Skip` for Rate and Target in Fahrenheit mode.
+- Rate sentinel `9999` remains `9999` in Fahrenheit mode.
+- End-phase Rate value `End` remains `End` in Fahrenheit mode.
+
+
+## Version 5.3.2
+
+- Renames `2e or more heating` to `2nd or additional heating`.
+- Renames `Old fuse + New layer` to `New layer to existing fuse`.
+- Simplifies the temperature selector labels to `Celsius` and `Fahrenheit`.
+- Preserves the existing internal values for saved-project compatibility.
+
+
+## Version 5.3.3
+
+- Limits `Diameter / effective size` input to whole centimetres.
+- Rounds entered or calculated effective-size values to the nearest integer.
+- Displays no decimal places in the Diameter / effective size field or result.
+- Leaves Length, Width and the separate Diagonal result unchanged.
+
+
+## Version 5.3.4
+
+- Fixes editing of `Diameter / effective size`.
+- All digits can now be deleted so a completely new value can be entered.
+- While the active field is empty, the displayed effective-size result shows an em dash.
+- A valid entered value is still rounded to the nearest whole centimetre.
+- If the field is left empty, the previous valid value is restored.

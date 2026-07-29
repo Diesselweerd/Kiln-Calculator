@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#15324c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KilnCalc">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>KilnCalc 5.3.4</title>
+</head>
+<body>
+<header class="app-header">
+  <div class="header-inner">
+    <div>
+      <h1>KilnCalc <span>5.3.4</span></h1>
+      <p>Glass fusing & slumping calculator</p>
+    </div>
+    <button id="newButton" class="header-button">New</button>
+  </div>
+</header>
+
+<div id="updateNotice" class="update-notice" hidden>
+  <span id="updateText"></span>
+  <button id="updateButton">Refresh</button>
+</div>
+
+<main>
+  <input id="activeProjectId" type="hidden">
+  <input id="importFile" type="file" accept=".json,.kilncalc.json" hidden>
+
+  <section class="toolbar-card">
+    <div class="toolbar">
+      <button id="undoButton" class="tool-button">↶ <span>Undo</span></button>
+      <button id="redoButton" class="tool-button">↷ <span>Redo</span></button>
+      <label class="theme-control">Theme
+        <select id="themeSelect">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </label>
+      <label class="theme-control">Temperature
+        <select id="temperatureUnit">
+          <option value="C">Celsius</option>
+          <option value="F">Fahrenheit</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <details class="panel" data-section="dimensions" open>
+    <summary><span>1</span> Shape & dimensions</summary>
+    <div class="panel-body form-grid">
+      <label class="full">Glass shape
+        <select id="shapeMode">
+          <option value="round">Round glass</option>
+          <option value="rectangle">Rectangular glass</option>
+        </select>
+      </label>
+
+      <label id="roundCard">Diameter / effective size <span>cm</span>
+        <input id="roundDiameter" type="number" min="0" max="60" step="1" value="40">
+        <small>Editable for round glass; calculated and locked for rectangular glass.</small>
+      </label>
+
+      <label>Length <span>cm</span>
+        <input id="length" type="number" min="0" max="60" step="0.1" value="0">
+      </label>
+
+      <label>Width <span>cm</span>
+        <input id="width" type="number" min="0" max="60" step="0.1" value="0">
+      </label>
+
+      <label class="switch-row full">
+        <input id="autoShape" type="checkbox" checked>
+        <span>Automatically switch to rectangular mode when a dimension is entered</span>
+      </label>
+
+      <p id="rectangleHelp" class="info-strip full" hidden>
+        Both dimensions are required. The calculated diagonal replaces the diameter automatically.
+      </p>
+
+      <div class="calculated-field full">
+        <div><strong>Effective size used</strong><small id="effectiveMessage"></small></div>
+        <output><span id="effectiveSize">40.0</span> cm</output>
+      </div>
+
+      <div class="calculated-field subtle full">
+        <div><strong>Diagonal</strong><small>Rounded to one decimal.</small></div>
+        <output><span id="diagonal">—</span> cm</output>
+      </div>
+    </div>
+  </details>
+
+  <details class="panel" data-section="firing" open>
+    <summary><span>2</span> Glass & firing input</summary>
+    <div class="panel-body form-grid">
+      <label>Glass type
+        <select id="glassType">
+          <option>System96</option>
+          <option selected>Bullseye-COE90</option>
+          <option>COE-90 experimental</option>
+        </select>
+      </label>
+
+      <label>Maximum thickness <span>mm</span>
+        <input id="thickness" type="number" min="0" max="50" step="0.1" value="6">
+      </label>
+
+      <label>Heating history
+        <select id="heatingHistory">
+          <option value="1e-heating">1st heating</option>
+          <option>2nd or additional heating</option>
+          <option>New layer to existing fuse</option>
+        </select>
+      </label>
+
+      <label>Process
+        <select id="process">
+          <option>TackFuse</option>
+          <option>ContourFuse</option>
+          <option selected>FullFuse</option>
+          <option>Slump</option>
+        </select>
+      </label>
+
+      <label>Bubble soak
+        <select id="bubbleSoak">
+          <option value="No Bubble Soak">SKIP</option>
+          <option>Slow + 15 min</option>
+          <option>Slow + 30 min</option>
+          <option>Slow + 60 min</option>
+          <option>Full + 15 min</option>
+          <option>Full + 30 min</option>
+          <option>Full + 60 min</option>
+        </select>
+      </label>
+
+      <label>Enclosure / dams
+        <select id="enclosure">
+          <option>Not applicable</option>
+          <option>NoDams down to 6mm</option>
+          <option>Recalculate diameter</option>
+        </select>
+      </label>
+
+      <div id="ceramicFields" class="field-group full">
+        <label>Kiln firing type
+          <select id="ovenType">
+            <option>Top-Firing</option>
+            <option>Side-Firing</option>
+          </select>
+        </label>
+
+        <label>Ceramic mold max rate <span id="ceramicMaxRateUnit">°C/h</span>
+          <input id="ceramicMaxRate" type="number" min="1" step="1" value="330">
+        </label>
+      </div>
+
+      <label>Transformation hold <span>min</span>
+        <input id="transformationHold" type="number" min="0" step="1" value="30">
+      </label>
+
+      <label>Top-temperature hold <span>min</span>
+        <input id="topTemperatureHold" type="number" min="0" step="1" value="10">
+      </label>
+
+      <label class="full">Project description
+        <input id="description" type="text" value="Proefstuk">
+      </label>
+
+      <p id="saveStatus" class="save-status full"></p>
+    </div>
+  </details>
+
+  <div id="warnings" class="warnings" hidden></div>
+
+  <details class="panel" data-section="schedule" open>
+    <summary><span>3</span> Automatic firing schedule</summary>
+    <div class="panel-body" id="scheduleBody"></div>
+    <div class="panel-body schedule-duration">
+      <div class="result accent duration-result">
+        <small>Programmed duration</small>
+        <strong id="totalDurationHours">4.1</strong>
+        <span>hours</span>
+      </div>
+
+      <div class="schedule-duration-explanation">
+        <div><strong>Natural cooling</strong><span>Not included</span></div>
+        <p>Natural cooling time depends on the kiln, load, insulation and ambient temperature.</p>
+        <div><strong>Expected completion</strong><span>Programmed duration + natural cooling</span></div>
+      </div>
+
+      <div class="firing-graph-panel">
+        <div class="firing-graph-header">
+          <h3>Firing schedule graph</h3>
+          <p>Natural cooling is shown as a dashed illustrative line and is not included in programmed duration.</p>
+        </div>
+        <div class="firing-graph-wrap">
+          <svg id="firingScheduleGraph" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet" role="img"
+            aria-label="Temperature versus programmed time firing schedule graph"></svg>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="panel" data-section="results" open>
+    <summary><span>4</span> Calculated results</summary>
+    <div class="panel-body result-grid">
+      <div class="result"><small>Transformation point</small><strong id="transformationPoint">516</strong><span id="transformationPointUnit">°C</span></div>
+      <div class="result"><small>Softening point</small><strong id="softeningPoint">677</strong><span id="softeningPointUnit">°C</span></div>
+      <div class="result accent"><small>Top temperature</small><strong id="topTemperature">804</strong><span id="topTemperatureUnit">°C</span></div>
+      <div class="result"><small>Upper anneal</small><strong id="upperAnneal">482</strong><span id="upperAnnealUnit">°C</span></div>
+      <div class="result"><small>Lower anneal</small><strong id="lowerAnneal">371</strong><span id="lowerAnnealUnit">°C</span></div>
+      <div class="result"><small>Effective thickness</small><strong id="effectiveThickness">6.0</strong><span>mm</span></div>
+      <div class="result"><small>Minutes per mm</small><strong id="minutesPerMm">18.36</strong><span>min</span></div>
+      <div class="result"><small>First heating</small><strong id="firstHeatingMinutes">110</strong><span>min</span></div>
+      <div class="result accent"><small>First heating rate</small><strong id="firstHeatingRate">271</strong><span id="firstHeatingRateUnit">°C/h</span></div>
+      <div class="result"><small>Bubble rate</small><strong id="bubbleRate">9999</strong><span id="bubbleRateUnit">°C/h</span></div>
+      <div class="result"><small>Bubble hold</small><strong id="bubbleHold">0</strong><span>min</span></div>
+      <div class="result"><small>Anneal time</small><strong id="annealTime">73</strong><span>min</span></div>
+      <div class="result"><small>Anneal hold</small><strong id="annealHold">24</strong><span>min</span></div>
+      <div class="result"><small>Calculated final diameter</small><strong id="calculatedFinalDiameter">40.0</strong><span>cm</span></div>
+    </div>
+  </details>
+
+  <details class="panel" data-section="comparison">
+    <summary><span>5</span> Glass-type comparison</summary>
+    <div class="panel-body table-scroll">
+      <table>
+        <thead><tr><th>Glass</th><th>Transform</th><th>Selected top</th><th>Upper</th><th>Lower</th></tr></thead>
+        <tbody id="comparisonBody"></tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="panel" data-section="projects" open>
+    <summary><span>6</span> Project library <em id="projectCount">0</em></summary>
+    <div class="panel-body">
+      <div class="project-actions">
+        <button id="saveProjectButton" class="primary">Save project</button>
+        <button id="exportCurrentButton">Export current</button>
+        <button id="importButton">Import</button>
+        <button id="exportAllButton">Export all</button>
+      </div>
+      <div id="projectList"></div>
+    </div>
+  </details>
+
+  <details class="panel help-panel" data-section="help">
+    <summary><span>?</span> Help & calculation notes</summary>
+    <div class="panel-body help-content">
+      <p><strong>Workbook source:</strong> Version 22 July 2026. The calculation constants and active formulas are reproduced in the JavaScript engine.</p>
+      <p><strong>Round glass:</strong> enter the widest diameter.</p>
+      <p><strong>Rectangular glass:</strong> enter length and width; the rounded diagonal becomes the effective diameter.</p>
+      <p><strong>Heating history:</strong> repeated firing receives a longer, more conservative transformation time.</p>
+      <p><strong>Bubble soak:</strong> unavailable for slump processes because slump temperature is below the softening point.</p>
+      <p><strong>FullFuse and dams:</strong> effective annealing thickness may be recalculated to 6 mm, matching the workbook logic.</p>
+      <p>Always test valuable projects with sample glass and use kiln-manufacturer guidance.</p>
+    </div>
+  </details>
+</main>
+
+<nav class="action-bar">
+  <button id="saveProjectButtonBottom">Save</button>
+  <button id="shareButton">Share</button>
+  <button id="printButton">Print / PDF</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<script type="module" src="app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("saveProjectButtonBottom").addEventListener("click", () =>
+    document.getElementById("saveProjectButton").click()
+  );
+});
+</script>
+</body>
+</html>

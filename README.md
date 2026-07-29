@@ -190,3 +190,15 @@ The Refresh button now also:
 - Old: `Rounded to one decimal, as in Excel.`
 - New: `Rounded to one decimal.`
 - Retains all previous graph, Bubble Soak and natural-cooling corrections.
+
+
+## Version 5.3.0
+
+- Adds a `Celsius (°C)` / `Fahrenheit (°F)` selector.
+- Celsius mode is unchanged from version 5.2.6.
+- Fahrenheit temperatures are displayed using `Tf = (Tc × 1.8) + 32`.
+- Fahrenheit rates are displayed using `Tf = Tc × 1.8`.
+- The ceramic-mould maximum-rate input accepts the selected rate unit.
+- Fahrenheit rate input is converted back to Celsius internally before calculation.
+- Schedule cards, calculated results, comparison table and firing graph use the selected unit.
+- All calculations remain based on the original Celsius engine.

@@ -8,7 +8,7 @@ const $ = id => document.getElementById(id);
 const FIELD_IDS = [
   "shapeMode","glassType","roundDiameter","length","width","thickness",
   "heatingHistory","process","bubbleSoak","enclosure","ovenType",
-  "ceramicMaxRate","transformationHold","topTemperatureHold","description"
+  "ceramicMaxRate","transformationHold","topTemperatureHold","description","temperatureUnit"
 ];
 
 const STATE_KEY = "kilncalc-v5-current";
@@ -26,6 +26,55 @@ const clone = obj => JSON.parse(JSON.stringify(obj));
 const projectId = () => crypto.randomUUID?.() ||
   `p-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
+const temperatureUnit = () => $("temperatureUnit")?.value === "F" ? "F" : "C";
+const cToF = value => (Number(value) * 1.8) + 32;
+const fToC = value => (Number(value) - 32) / 1.8;
+const cRateToF = value => Number(value) * 1.8;
+const fRateToC = value => Number(value) / 1.8;
+
+function formatConverted(value, digits = 1) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return value;
+  const rounded = Math.round((numeric + Number.EPSILON) * (10 ** digits)) / (10 ** digits);
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(digits);
+}
+
+function displayTemperature(value) {
+  return temperatureUnit() === "F" ? formatConverted(cToF(value), 1) : String(value);
+}
+
+function displayRate(value) {
+  return temperatureUnit() === "F" ? formatConverted(cRateToF(value), 1) : String(value);
+}
+
+function displayTempUnit() {
+  return temperatureUnit() === "F" ? "°F" : "°C";
+}
+
+function displayRateUnit() {
+  return temperatureUnit() === "F" ? "°F/h" : "°C/h";
+}
+
+function convertTemperatureText(text) {
+  if (temperatureUnit() !== "F") return String(text ?? "");
+  return String(text ?? "")
+    .replace(/(-?\d+(?:\.\d+)?)\s*°C\s*\/\s*(?:u|h)/gi,
+      (_, value) => `${formatConverted(cRateToF(value), 1)} °F/h`)
+    .replace(/(-?\d+(?:\.\d+)?)\s*°C\b/gi,
+      (_, value) => `${formatConverted(cToF(value), 1)} °F`);
+}
+
+function updateTemperatureUnitLabels() {
+  const tempUnit = displayTempUnit();
+  const rateUnit = displayRateUnit();
+  [
+    "transformationPointUnit","softeningPointUnit","topTemperatureUnit",
+    "upperAnnealUnit","lowerAnnealUnit"
+  ].forEach(id => { if ($(id)) $(id).textContent = tempUnit; });
+  ["firstHeatingRateUnit","bubbleRateUnit","ceramicMaxRateUnit"]
+    .forEach(id => { if ($(id)) $(id).textContent = rateUnit; });
+}
+
 function readForm() {
   return Object.fromEntries(FIELD_IDS.map(id => [id, $(id).value]));
 }
@@ -37,11 +86,14 @@ function normalizeForm(raw) {
   return {
     ...DEFAULT_INPUT,
     ...normalizedRaw,
+    temperatureUnit: temperatureUnit(),
     roundDiameter: Number(raw.roundDiameter),
     length: Number(raw.length),
     width: Number(raw.width),
     thickness: Number(raw.thickness),
-    ceramicMaxRate: Number(raw.ceramicMaxRate),
+    ceramicMaxRate: temperatureUnit() === "F"
+      ? fRateToC(raw.ceramicMaxRate)
+      : Number(raw.ceramicMaxRate),
     transformationHold: Number(raw.transformationHold),
     topTemperatureHold: Number(raw.topTemperatureHold)
   };
@@ -205,11 +257,11 @@ function renderSchedule(result) {
           }</span>
         </div>
         <div class="schedule-metrics">
-          <span><small>Rate</small><strong>${step.rate}</strong><em>°C/u</em></span>
-          <span><small>Target</small><strong>${step.target}</strong><em>°C</em></span>
+          <span><small>Rate</small><strong>${displayRate(step.rate)}</strong><em>${displayRateUnit()}</em></span>
+          <span><small>Target</small><strong>${displayTemperature(step.target)}</strong><em>${displayTempUnit()}</em></span>
           <span><small>Hold</small><strong>${step.hold}</strong><em>min</em></span>
         </div>
-        <p>${step.note}</p>
+        <p>${convertTemperatureText(step.note)}</p>
       </div>
     </article>`).join("");
 }
@@ -220,8 +272,8 @@ function renderComparison() {
     const top = process === "TackFuse" ? glass.tack :
       process === "ContourFuse" ? glass.contour :
       process === "FullFuse" ? glass.fullFuse : glass.slump;
-    return `<tr><td>${name}</td><td>${glass.transformation}</td><td>${top}</td>
-      <td>${glass.upperAnneal}</td><td>${glass.lowerAnneal}</td></tr>`;
+    return `<tr><td>${name}</td><td>${displayTemperature(glass.transformation)}</td><td>${displayTemperature(top)}</td>
+      <td>${displayTemperature(glass.upperAnneal)}</td><td>${displayTemperature(glass.lowerAnneal)}</td></tr>`;
   }).join("");
   $("comparisonBody").innerHTML = rows;
 }
@@ -246,21 +298,22 @@ function render(push = true) {
 
     $("effectiveSize").textContent = result.effectiveSize.toFixed(1);
     $("diagonal").textContent = result.diagonal === null ? "—" : result.diagonal.toFixed(1);
-    $("topTemperature").textContent = result.topTemperature;
+    $("topTemperature").textContent = displayTemperature(result.topTemperature);
     $("effectiveThickness").textContent = result.effectiveThickness.toFixed(1);
     $("minutesPerMm").textContent = result.minutesPerMm.toFixed(2);
     $("firstHeatingMinutes").textContent = result.firstHeatingMinutes;
-    $("firstHeatingRate").textContent = result.firstHeatingRate;
-    $("bubbleRate").textContent = result.bubbleRate;
+    $("firstHeatingRate").textContent = displayRate(result.firstHeatingRate);
+    $("bubbleRate").textContent = displayRate(result.bubbleRate);
     $("bubbleHold").textContent = result.bubbleHold;
     $("annealTime").textContent = result.annealTime;
     $("annealHold").textContent = result.annealHold;
     $("calculatedFinalDiameter").textContent = result.calculatedFinalDiameter.toFixed(1);
     $("totalDurationHours").textContent = result.totalDurationHours.toFixed(1);
-    $("transformationPoint").textContent = result.glass.transformation;
-    $("softeningPoint").textContent = result.glass.softening;
-    $("upperAnneal").textContent = result.glass.upperAnneal;
-    $("lowerAnneal").textContent = result.glass.lowerAnneal;
+    $("transformationPoint").textContent = displayTemperature(result.glass.transformation);
+    $("softeningPoint").textContent = displayTemperature(result.glass.softening);
+    $("upperAnneal").textContent = displayTemperature(result.glass.upperAnneal);
+    $("lowerAnneal").textContent = displayTemperature(result.glass.lowerAnneal);
+    updateTemperatureUnitLabels();
 
     const mode = raw.shapeMode;
     $("effectiveMessage").textContent =
@@ -508,6 +561,22 @@ FIELD_IDS.forEach(id => {
 });
 
 $("themeSelect").addEventListener("change", () => { saveSettings(); });
+$("temperatureUnit").addEventListener("change", event => {
+  const previousUnit = event.target.dataset.previousUnit || "C";
+  const nextUnit = event.target.value;
+  const rateInput = $("ceramicMaxRate");
+  const currentRate = Number(rateInput.value);
+
+  if (Number.isFinite(currentRate) && previousUnit !== nextUnit) {
+    rateInput.value = formatConverted(
+      nextUnit === "F" ? cRateToF(currentRate) : fRateToC(currentRate),
+      1
+    );
+  }
+
+  event.target.dataset.previousUnit = nextUnit;
+  render(true);
+});
 $("autoShape").addEventListener("change", saveSettings);
 $("undoButton").addEventListener("click", undo);
 $("redoButton").addEventListener("click", redo);
@@ -547,6 +616,7 @@ $("updateButton").addEventListener("click", async () => {
 
 loadSettings();
 loadCurrent();
+$("temperatureUnit").dataset.previousUnit = temperatureUnit();
 setupDetailsPersistence();
 updateShapeUI();
 render(false);
@@ -700,7 +770,7 @@ function renderFiringScheduleGraph(result) {
         t2: elapsed,
         temp1: rampStartTemp,
         temp2: target,
-        text: String(step.rate ?? step.rampRate ?? "")
+        text: displayRate(step.rate ?? step.rampRate ?? "")
       });
     } else if (target !== currentTemp) {
       points.push({ t: elapsed, temp: target, kind: "transition", stepNumber });
@@ -753,13 +823,13 @@ function renderFiringScheduleGraph(result) {
     const temp = yMin + ((yMax - yMin) * i / 6);
     const yy = y(temp);
     add("line", { x1: margin.left, y1: yy, x2: W - margin.right, y2: yy, class: "graph-grid" });
-    add("text", { x: margin.left - 12, y: yy + 4, "text-anchor": "end", class: "graph-tick" }, `${Math.round(temp)}°`);
+    add("text", { x: margin.left - 12, y: yy + 4, "text-anchor": "end", class: "graph-tick" }, `${displayTemperature(Math.round(temp))}°`);
   }
 
   add("line", { x1: margin.left, y1: margin.top, x2: margin.left, y2: H - margin.bottom, class: "graph-axis" });
   add("line", { x1: margin.left, y1: H - margin.bottom, x2: x(programmedEnd), y2: H - margin.bottom, class: "graph-axis" });
 
-  add("text", { x: 20, y: 27, class: "graph-axis-label" }, "Temperature (°C)");
+  add("text", { x: 20, y: 27, class: "graph-axis-label" }, `Temperature (${displayTempUnit()})`);
   add("path", {
     d: points.map((point, index) => `${index === 0 ? "M" : "L"} ${x(point.t)} ${y(point.temp)}`).join(" "),
     class: "graph-line"

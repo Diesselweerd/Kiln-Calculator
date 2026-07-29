@@ -1,5 +1,5 @@
 
-export const APP_VERSION = "5.2.6";
+export const APP_VERSION = "5.3.0";
 export const WORKBOOK_VERSION = "V 22 juli 2026";
 
 export const GLASS_DATA = {
@@ -56,7 +56,8 @@ export const DEFAULT_INPUT = {
   ceramicMaxRate: 330,
   transformationHold: 30,
   topTemperatureHold: 10,
-  description: "Proefstuk"
+  description: "Proefstuk",
+  temperatureUnit: "C"
 };
 
 const number = (value, fallback = 0) => {

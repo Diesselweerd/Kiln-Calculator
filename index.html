@@ -11,13 +11,13 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="styles.css">
-  <title>KilnCalc 5.2.6</title>
+  <title>KilnCalc 5.3.0</title>
 </head>
 <body>
 <header class="app-header">
   <div class="header-inner">
     <div>
-      <h1>KilnCalc <span>5.2.6</span></h1>
+      <h1>KilnCalc <span>5.3.0</span></h1>
       <p>Glass fusing & slumping calculator</p>
     </div>
     <button id="newButton" class="header-button">New</button>
@@ -42,6 +42,12 @@
           <option value="system">System</option>
           <option value="light">Light</option>
           <option value="dark">Dark</option>
+        </select>
+      </label>
+      <label class="theme-control">Temperature
+        <select id="temperatureUnit">
+          <option value="C">Celsius (°C)</option>
+          <option value="F">Fahrenheit (°F)</option>
         </select>
       </label>
     </div>
@@ -151,7 +157,7 @@
           </select>
         </label>
 
-        <label>Ceramic mold max rate <span>°C/u</span>
+        <label>Ceramic mold max rate <span id="ceramicMaxRateUnit">°C/h</span>
           <input id="ceramicMaxRate" type="number" min="1" step="1" value="330">
         </label>
       </div>
@@ -206,16 +212,16 @@
   <details class="panel" data-section="results" open>
     <summary><span>4</span> Calculated results</summary>
     <div class="panel-body result-grid">
-      <div class="result"><small>Transformation point</small><strong id="transformationPoint">516</strong><span>°C</span></div>
-      <div class="result"><small>Softening point</small><strong id="softeningPoint">677</strong><span>°C</span></div>
-      <div class="result accent"><small>Top temperature</small><strong id="topTemperature">804</strong><span>°C</span></div>
-      <div class="result"><small>Upper anneal</small><strong id="upperAnneal">482</strong><span>°C</span></div>
-      <div class="result"><small>Lower anneal</small><strong id="lowerAnneal">371</strong><span>°C</span></div>
+      <div class="result"><small>Transformation point</small><strong id="transformationPoint">516</strong><span id="transformationPointUnit">°C</span></div>
+      <div class="result"><small>Softening point</small><strong id="softeningPoint">677</strong><span id="softeningPointUnit">°C</span></div>
+      <div class="result accent"><small>Top temperature</small><strong id="topTemperature">804</strong><span id="topTemperatureUnit">°C</span></div>
+      <div class="result"><small>Upper anneal</small><strong id="upperAnneal">482</strong><span id="upperAnnealUnit">°C</span></div>
+      <div class="result"><small>Lower anneal</small><strong id="lowerAnneal">371</strong><span id="lowerAnnealUnit">°C</span></div>
       <div class="result"><small>Effective thickness</small><strong id="effectiveThickness">6.0</strong><span>mm</span></div>
       <div class="result"><small>Minutes per mm</small><strong id="minutesPerMm">18.36</strong><span>min</span></div>
       <div class="result"><small>First heating</small><strong id="firstHeatingMinutes">110</strong><span>min</span></div>
-      <div class="result accent"><small>First heating rate</small><strong id="firstHeatingRate">271</strong><span>°C/u</span></div>
-      <div class="result"><small>Bubble rate</small><strong id="bubbleRate">9999</strong><span>°C/u</span></div>
+      <div class="result accent"><small>First heating rate</small><strong id="firstHeatingRate">271</strong><span id="firstHeatingRateUnit">°C/h</span></div>
+      <div class="result"><small>Bubble rate</small><strong id="bubbleRate">9999</strong><span id="bubbleRateUnit">°C/h</span></div>
       <div class="result"><small>Bubble hold</small><strong id="bubbleHold">0</strong><span>min</span></div>
       <div class="result"><small>Anneal time</small><strong id="annealTime">73</strong><span>min</span></div>
       <div class="result"><small>Anneal hold</small><strong id="annealHold">24</strong><span>min</span></div>

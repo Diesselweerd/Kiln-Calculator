@@ -292,3 +292,9 @@ th:first-child,td:first-child { text-align:left; }
   .graph-natural-label { font-size: 11px; }
   .graph-hold-label { font-size: 10px; }
 }
+
+
+/* Temperature-unit selector */
+.toolbar .theme-control select#temperatureUnit {
+  min-width: 132px;
+}

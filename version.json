@@ -1,6 +1,6 @@
 {
-  "version": "5.2.6",
+  "version": "5.3.0",
   "workbookVersion": "V 22 juli 2026",
-  "released": "2026-07-25",
-  "notes": "Changes the Diagonal help text under Shapes and dimensions from 'Rounded to one decimal, as in Excel.' to 'Rounded to one decimal.'."
+  "released": "2026-07-29",
+  "notes": "Adds Celsius/Fahrenheit input and output selection. Temperature values use Tf=(Tc*1.8)+32; rate values use Tf=Tc*1.8. Internal calculations remain Celsius."
 }

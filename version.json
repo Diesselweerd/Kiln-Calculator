@@ -1,6 +1,6 @@
 {
-  "version": "5.3.2",
+  "version": "5.3.3",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-29",
-  "notes": "Updates visible Heating history labels and simplifies the temperature method selector labels to Celsius and Fahrenheit."
+  "notes": "Limits Diameter / effective size input and display to whole centimetres, rounded to the nearest integer."
 }

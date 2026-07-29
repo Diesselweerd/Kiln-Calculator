@@ -104,7 +104,7 @@ function normalizeForm(raw) {
     ...DEFAULT_INPUT,
     ...normalizedRaw,
     temperatureUnit: temperatureUnit(),
-    roundDiameter: Number(raw.roundDiameter),
+    roundDiameter: Math.round(Number(raw.roundDiameter)),
     length: Number(raw.length),
     width: Number(raw.width),
     thickness: Number(raw.thickness),
@@ -313,7 +313,11 @@ function render(push = true) {
     const validation = validateInput(raw);
     const result = calculateKiln(calcInput);
 
-    $("effectiveSize").textContent = result.effectiveSize.toFixed(1);
+    const roundedEffectiveSize = Math.round(result.effectiveSize);
+    if (document.activeElement !== $("roundDiameter") || raw.shapeMode !== "round") {
+      $("roundDiameter").value = roundedEffectiveSize;
+    }
+    $("effectiveSize").textContent = roundedEffectiveSize;
     $("diagonal").textContent = result.diagonal === null ? "—" : result.diagonal.toFixed(1);
     $("topTemperature").textContent = displayTemperature(result.topTemperature);
     $("effectiveThickness").textContent = result.effectiveThickness.toFixed(1);
@@ -574,7 +578,12 @@ FIELD_IDS.forEach(id => {
   const element = $(id);
   element.addEventListener("focus", () => { lastSnapshot = snapshot(); });
   element.addEventListener("input", () => render(true));
-  element.addEventListener("change", () => render(true));
+  element.addEventListener("change", () => {
+    if (id === "roundDiameter" && element.value !== "") {
+      element.value = Math.round(Number(element.value));
+    }
+    render(true);
+  });
 });
 
 $("themeSelect").addEventListener("change", () => { saveSettings(); });

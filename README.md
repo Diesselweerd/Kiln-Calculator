@@ -218,3 +218,11 @@ The Refresh button now also:
 - Renames `Old fuse + New layer` to `New layer to existing fuse`.
 - Simplifies the temperature selector labels to `Celsius` and `Fahrenheit`.
 - Preserves the existing internal values for saved-project compatibility.
+
+
+## Version 5.3.3
+
+- Limits `Diameter / effective size` input to whole centimetres.
+- Rounds entered or calculated effective-size values to the nearest integer.
+- Displays no decimal places in the Diameter / effective size field or result.
+- Leaves Length, Width and the separate Diagonal result unchanged.

@@ -104,7 +104,9 @@ function normalizeForm(raw) {
     ...DEFAULT_INPUT,
     ...normalizedRaw,
     temperatureUnit: temperatureUnit(),
-    roundDiameter: Math.round(Number(raw.roundDiameter)),
+    roundDiameter: raw.roundDiameter === "" || raw.roundDiameter === null
+      ? ""
+      : Math.round(Number(raw.roundDiameter)),
     length: Number(raw.length),
     width: Number(raw.width),
     thickness: Number(raw.thickness),
@@ -314,10 +316,17 @@ function render(push = true) {
     const result = calculateKiln(calcInput);
 
     const roundedEffectiveSize = Math.round(result.effectiveSize);
-    if (document.activeElement !== $("roundDiameter") || raw.shapeMode !== "round") {
-      $("roundDiameter").value = roundedEffectiveSize;
+    const diameterField = $("roundDiameter");
+    const editingEmptyDiameter =
+      document.activeElement === diameterField &&
+      raw.shapeMode === "round" &&
+      diameterField.value === "";
+
+    if (!editingEmptyDiameter &&
+        (document.activeElement !== diameterField || raw.shapeMode !== "round")) {
+      diameterField.value = roundedEffectiveSize;
     }
-    $("effectiveSize").textContent = roundedEffectiveSize;
+    $("effectiveSize").textContent = editingEmptyDiameter ? "—" : roundedEffectiveSize;
     $("diagonal").textContent = result.diagonal === null ? "—" : result.diagonal.toFixed(1);
     $("topTemperature").textContent = displayTemperature(result.topTemperature);
     $("effectiveThickness").textContent = result.effectiveThickness.toFixed(1);
@@ -349,8 +358,10 @@ function render(push = true) {
   renderFiringScheduleGraph(result);
     renderComparison();
 
-    state = raw;
-    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    if (!(raw.shapeMode === "round" && raw.roundDiameter === "")) {
+      state = raw;
+      localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    }
     $("saveStatus").textContent = `Saved locally · App ${APP_VERSION} · Workbook ${WORKBOOK_VERSION}`;
     window.currentResult = result;
     window.currentValidation = validation;
@@ -579,8 +590,15 @@ FIELD_IDS.forEach(id => {
   element.addEventListener("focus", () => { lastSnapshot = snapshot(); });
   element.addEventListener("input", () => render(true));
   element.addEventListener("change", () => {
-    if (id === "roundDiameter" && element.value !== "") {
-      element.value = Math.round(Number(element.value));
+    if (id === "roundDiameter") {
+      if (element.value === "") {
+        const previous = Number(state.roundDiameter);
+        element.value = Number.isFinite(previous) && previous > 0
+          ? Math.round(previous)
+          : Math.round(DEFAULT_INPUT.roundDiameter);
+      } else {
+        element.value = Math.round(Number(element.value));
+      }
     }
     render(true);
   });

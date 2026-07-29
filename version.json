@@ -1,6 +1,6 @@
 {
-  "version": "5.3.3",
+  "version": "5.3.4",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-29",
-  "notes": "Limits Diameter / effective size input and display to whole centimetres, rounded to the nearest integer."
+  "notes": "Fixes Diameter / effective size editing so all digits can be removed before entering a replacement value."
 }

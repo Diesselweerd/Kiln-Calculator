@@ -226,3 +226,12 @@ The Refresh button now also:
 - Rounds entered or calculated effective-size values to the nearest integer.
 - Displays no decimal places in the Diameter / effective size field or result.
 - Leaves Length, Width and the separate Diagonal result unchanged.
+
+
+## Version 5.3.4
+
+- Fixes editing of `Diameter / effective size`.
+- All digits can now be deleted so a completely new value can be entered.
+- While the active field is empty, the displayed effective-size result shows an em dash.
+- A valid entered value is still rounded to the nearest whole centimetre.
+- If the field is left empty, the previous valid value is restored.

@@ -588,7 +588,14 @@ function setupDetailsPersistence() {
 FIELD_IDS.forEach(id => {
   const element = $(id);
   element.addEventListener("focus", () => { lastSnapshot = snapshot(); });
-  element.addEventListener("input", () => render(true));
+
+  // Do not recalculate Diameter / effective size while individual digits
+  // are being edited. Re-rendering during input can reinsert the last digit
+  // before the browser has completed deleting it.
+  if (id !== "roundDiameter") {
+    element.addEventListener("input", () => render(true));
+  }
+
   element.addEventListener("change", () => {
     if (id === "roundDiameter") {
       if (element.value === "") {
@@ -602,6 +609,19 @@ FIELD_IDS.forEach(id => {
     }
     render(true);
   });
+});
+
+$("roundDiameter").addEventListener("blur", () => {
+  const element = $("roundDiameter");
+  if (element.value === "") {
+    const previous = Number(state.roundDiameter);
+    element.value = Number.isFinite(previous) && previous > 0
+      ? Math.round(previous)
+      : Math.round(DEFAULT_INPUT.roundDiameter);
+  } else {
+    element.value = Math.round(Number(element.value));
+  }
+  render(true);
 });
 
 $("themeSelect").addEventListener("change", () => { saveSettings(); });

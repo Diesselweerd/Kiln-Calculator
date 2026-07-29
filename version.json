@@ -1,6 +1,6 @@
 {
-  "version": "5.3.4",
+  "version": "5.3.5",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-29",
-  "notes": "Fixes Diameter / effective size editing so all digits can be removed before entering a replacement value."
+  "notes": "Fixes Diameter / effective size deletion by preventing recalculation during individual keystrokes and finalizing the value only on change or blur."
 }

@@ -1,5 +1,5 @@
 
-export const APP_VERSION = "5.3.4";
+export const APP_VERSION = "5.3.5";
 export const WORKBOOK_VERSION = "V 22 juli 2026";
 
 export const GLASS_DATA = {

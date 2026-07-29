@@ -235,3 +235,12 @@ The Refresh button now also:
 - While the active field is empty, the displayed effective-size result shows an em dash.
 - A valid entered value is still rounded to the nearest whole centimetre.
 - If the field is left empty, the previous valid value is restored.
+
+
+## Version 5.3.5
+
+- Corrects the remaining deletion problem in `Diameter / effective size`.
+- The field no longer triggers recalculation after every individual keystroke.
+- Every digit can therefore be removed before a replacement value is entered.
+- Rounding and recalculation occur when the edit is completed by changing or leaving the field.
+- An empty field restores the previous valid whole-number value only after leaving the field.

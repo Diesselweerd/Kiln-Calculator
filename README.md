@@ -268,3 +268,7 @@ The Refresh button now also:
 - Returning to Celsius restores the canonical stored Celsius value directly.
 - No Fahrenheit-to-Celsius calculation is performed for this field.
 - The Fahrenheit representation is read-only to prevent changing the canonical value through a display-only unit.
+
+
+## Version 5.3.9
+- Project description placeholder changed to "Enter your project's name here".

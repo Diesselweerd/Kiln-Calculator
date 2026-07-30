@@ -1,6 +1,6 @@
 {
-  "version": "5.3.8",
+  "version": "5.3.9",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-30",
-  "notes": "Keeps Ceramic mold maximum rate canonically in Celsius. Fahrenheit is a rounded display conversion only, and returning to Celsius restores the stored Celsius value without reverse conversion."
+  "notes": "Project description placeholder updated."
 }

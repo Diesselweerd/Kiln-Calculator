@@ -1,6 +1,6 @@
 {
-  "version": "5.3.5",
+  "version": "5.3.8",
   "workbookVersion": "V 22 juli 2026",
-  "released": "2026-07-29",
-  "notes": "Fixes Diameter / effective size deletion by preventing recalculation during individual keystrokes and finalizing the value only on change or blur."
+  "released": "2026-07-30",
+  "notes": "Keeps Ceramic mold maximum rate canonically in Celsius. Fahrenheit is a rounded display conversion only, and returning to Celsius restores the stored Celsius value without reverse conversion."
 }

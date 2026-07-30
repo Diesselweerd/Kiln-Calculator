@@ -28,7 +28,6 @@ const projectId = () => crypto.randomUUID?.() ||
 
 const temperatureUnit = () => $("temperatureUnit")?.value === "F" ? "F" : "C";
 const cToF = value => (Number(value) * 1.8) + 32;
-const fToC = value => (Number(value) - 32) / 1.8;
 const cRateToF = value => Number(value) * 1.8;
 const fRateToC = value => Number(value) / 1.8;
 
@@ -48,6 +47,18 @@ function displayTemperature(value) {
   if (!Number.isFinite(numeric)) return text;
   return temperatureUnit() === "F"
     ? formatConverted(cToF(numeric), 1)
+    : String(value);
+}
+
+function displayScheduleTemperature(value) {
+  const text = String(value ?? "").trim();
+  const upper = text.toUpperCase();
+  if (upper === "SKIP") return "Skip";
+  if (upper === "END") return "End";
+  const numeric = Number(text);
+  if (!Number.isFinite(numeric)) return text;
+  return temperatureUnit() === "F"
+    ? String(Math.round(cToF(numeric)))
     : String(value);
 }
 
@@ -90,6 +101,15 @@ function updateTemperatureUnitLabels() {
   ].forEach(id => { if ($(id)) $(id).textContent = tempUnit; });
   ["firstHeatingRateUnit","bubbleRateUnit","ceramicMaxRateUnit"]
     .forEach(id => { if ($(id)) $(id).textContent = rateUnit; });
+
+  const ceramicRateInput = $("ceramicMaxRate");
+  if (ceramicRateInput) {
+    ceramicRateInput.step = "1";
+    ceramicRateInput.readOnly = temperatureUnit() === "F";
+    ceramicRateInput.title = temperatureUnit() === "F"
+      ? "Displayed in Fahrenheit; the calculation model retains the Celsius value."
+      : "";
+  }
 }
 
 function readForm() {
@@ -111,7 +131,7 @@ function normalizeForm(raw) {
     width: Number(raw.width),
     thickness: Number(raw.thickness),
     ceramicMaxRate: temperatureUnit() === "F"
-      ? fRateToC(raw.ceramicMaxRate)
+      ? Number($("ceramicMaxRate").dataset.celsiusValue)
       : Number(raw.ceramicMaxRate),
     transformationHold: Number(raw.transformationHold),
     topTemperatureHold: Number(raw.topTemperatureHold)
@@ -122,6 +142,15 @@ function writeForm(data) {
   FIELD_IDS.forEach(id => {
     if (data[id] !== undefined && $(id)) $(id).value = data[id];
   });
+
+  const ceramicRateInput = $("ceramicMaxRate");
+  const canonicalCelsius = Number(data.ceramicMaxRate);
+  if (ceramicRateInput && Number.isFinite(canonicalCelsius)) {
+    ceramicRateInput.dataset.celsiusValue = String(canonicalCelsius);
+    if ((data.temperatureUnit || temperatureUnit()) === "F") {
+      ceramicRateInput.value = String(Math.round((canonicalCelsius * 1.8) + 32));
+    }
+  }
 }
 
 function snapshot() {
@@ -277,7 +306,7 @@ function renderSchedule(result) {
         </div>
         <div class="schedule-metrics">
           <span><small>Rate</small><strong>${displayRate(step.rate)}</strong><em>${Number.isFinite(Number(step.rate)) ? displayRateUnit() : ""}</em></span>
-          <span><small>Target</small><strong>${displayTemperature(step.target)}</strong><em>${Number.isFinite(Number(step.target)) ? displayTempUnit() : ""}</em></span>
+          <span><small>Target</small><strong>${displayScheduleTemperature(step.target)}</strong><em>${Number.isFinite(Number(step.target)) ? displayTempUnit() : ""}</em></span>
           <span><small>Hold</small><strong>${step.hold}</strong><em>min</em></span>
         </div>
         <p>${convertTemperatureText(step.note)}</p>
@@ -611,6 +640,14 @@ FIELD_IDS.forEach(id => {
   });
 });
 
+$("ceramicMaxRate").addEventListener("blur", () => {
+  const element = $("ceramicMaxRate");
+  if (temperatureUnit() === "C" && element.value !== "") {
+    element.dataset.celsiusValue = String(Number(element.value));
+  }
+  render(true);
+});
+
 $("roundDiameter").addEventListener("blur", () => {
   const element = $("roundDiameter");
   if (element.value === "") {
@@ -629,16 +666,24 @@ $("temperatureUnit").addEventListener("change", event => {
   const previousUnit = event.target.dataset.previousUnit || "C";
   const nextUnit = event.target.value;
   const rateInput = $("ceramicMaxRate");
-  const currentRate = Number(rateInput.value);
 
-  if (Number.isFinite(currentRate) && previousUnit !== nextUnit) {
-    rateInput.value = formatConverted(
-      nextUnit === "F" ? cRateToF(currentRate) : fRateToC(currentRate),
-      1
-    );
+  if (previousUnit !== nextUnit) {
+    if (nextUnit === "F") {
+      const canonicalCelsius = Number(rateInput.value);
+      if (Number.isFinite(canonicalCelsius)) {
+        rateInput.dataset.celsiusValue = String(canonicalCelsius);
+        rateInput.value = String(Math.round((canonicalCelsius * 1.8) + 32));
+      }
+    } else {
+      const canonicalCelsius = Number(rateInput.dataset.celsiusValue);
+      if (Number.isFinite(canonicalCelsius)) {
+        rateInput.value = String(canonicalCelsius);
+      }
+    }
   }
 
   event.target.dataset.previousUnit = nextUnit;
+  updateTemperatureUnitLabels();
   render(true);
 });
 $("autoShape").addEventListener("change", saveSettings);
@@ -680,6 +725,9 @@ $("updateButton").addEventListener("click", async () => {
 
 loadSettings();
 loadCurrent();
+if (!$("ceramicMaxRate").dataset.celsiusValue) {
+  $("ceramicMaxRate").dataset.celsiusValue = String(state.ceramicMaxRate);
+}
 $("temperatureUnit").dataset.previousUnit = temperatureUnit();
 setupDetailsPersistence();
 updateShapeUI();

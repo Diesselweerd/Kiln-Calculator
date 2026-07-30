@@ -272,3 +272,9 @@ The Refresh button now also:
 
 ## Version 5.3.9
 - Project description placeholder changed to "Enter your project's name here".
+
+
+## Version 5.3.10
+
+- `Enter your project's name here` is now an actual visible default value in the Project description field.
+- It is no longer implemented only as placeholder text.

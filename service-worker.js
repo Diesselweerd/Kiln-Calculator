@@ -1,4 +1,4 @@
-const CACHE = "kilncalc-v5-3-9-20260730-1";
+const CACHE = "kilncalc-v5-3-10-20260730-1";
 const ASSETS = [
   "./","./index.html","./styles.css","./app.js","./engine.js",
   "./manifest.webmanifest","./icon.svg","./icon-180.png","./icon-512.png"

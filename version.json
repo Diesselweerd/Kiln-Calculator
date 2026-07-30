@@ -1,6 +1,6 @@
 {
-  "version": "5.3.9",
+  "version": "5.3.10",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-30",
-  "notes": "Project description placeholder updated."
+  "notes": "Project description now contains a visible default value instead of only a placeholder."
 }

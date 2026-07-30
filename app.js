@@ -149,6 +149,8 @@ function writeForm(data) {
     ceramicRateInput.dataset.celsiusValue = String(canonicalCelsius);
     if ((data.temperatureUnit || temperatureUnit()) === "F") {
       ceramicRateInput.value = String(Math.round((canonicalCelsius * 1.8) + 32));
+    } else {
+      ceramicRateInput.value = String(Math.round(canonicalCelsius));
     }
   }
 }
@@ -643,7 +645,9 @@ FIELD_IDS.forEach(id => {
 $("ceramicMaxRate").addEventListener("blur", () => {
   const element = $("ceramicMaxRate");
   if (temperatureUnit() === "C" && element.value !== "") {
-    element.dataset.celsiusValue = String(Number(element.value));
+    const wholeCelsius = Math.round(Number(element.value));
+    element.value = String(wholeCelsius);
+    element.dataset.celsiusValue = String(wholeCelsius);
   }
   render(true);
 });
@@ -677,7 +681,7 @@ $("temperatureUnit").addEventListener("change", event => {
     } else {
       const canonicalCelsius = Number(rateInput.dataset.celsiusValue);
       if (Number.isFinite(canonicalCelsius)) {
-        rateInput.value = String(canonicalCelsius);
+        rateInput.value = String(Math.round(canonicalCelsius));
       }
     }
   }

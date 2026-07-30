@@ -278,3 +278,11 @@ The Refresh button now also:
 
 - `Enter your project's name here` is now an actual visible default value in the Project description field.
 - It is no longer implemented only as placeholder text.
+
+
+## Version 5.3.11
+
+- Sets the default Ceramic mold maximum rate to `330 °C`.
+- Fahrenheit mode displays the equivalent as `626 °F`.
+- Both Celsius and Fahrenheit values are displayed as whole numbers.
+- Celsius remains the canonical internal model value.

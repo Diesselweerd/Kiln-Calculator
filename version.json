@@ -1,6 +1,6 @@
 {
-  "version": "5.3.11",
+  "version": "5.3.12",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-30",
-  "notes": "Sets the default Ceramic mold maximum rate to 330 \u00b0C. Fahrenheit mode displays the rounded equivalent 626 \u00b0F. Both unit modes use whole-number display."
+  "notes": "Corrects Ceramic mold maximum rate as a rate conversion: 330 \u00b0C/hour equals 594 \u00b0F/hour. No +32 offset is used. Both values display as whole numbers."
 }

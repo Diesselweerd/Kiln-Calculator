@@ -286,3 +286,12 @@ The Refresh button now also:
 - Fahrenheit mode displays the equivalent as `626 °F`.
 - Both Celsius and Fahrenheit values are displayed as whole numbers.
 - Celsius remains the canonical internal model value.
+
+
+## Version 5.3.12
+
+- Corrects Ceramic mold maximum rate to a true rate conversion.
+- Default: `330 °C/hour`.
+- Fahrenheit equivalent: `594 °F/hour`.
+- Rate conversion uses `°F/hour = °C/hour × 1.8`; no `+32` offset is applied.
+- Both unit modes display whole numbers.

@@ -107,7 +107,7 @@ function updateTemperatureUnitLabels() {
     ceramicRateInput.step = "1";
     ceramicRateInput.readOnly = temperatureUnit() === "F";
     ceramicRateInput.title = temperatureUnit() === "F"
-      ? "Displayed in Fahrenheit; the calculation model retains the Celsius value."
+      ? "Displayed in °F/hour; the calculation model retains the °C/hour value."
       : "";
   }
 }
@@ -148,7 +148,7 @@ function writeForm(data) {
   if (ceramicRateInput && Number.isFinite(canonicalCelsius)) {
     ceramicRateInput.dataset.celsiusValue = String(canonicalCelsius);
     if ((data.temperatureUnit || temperatureUnit()) === "F") {
-      ceramicRateInput.value = String(Math.round((canonicalCelsius * 1.8) + 32));
+      ceramicRateInput.value = String(Math.round(canonicalCelsius * 1.8));
     } else {
       ceramicRateInput.value = String(Math.round(canonicalCelsius));
     }
@@ -676,7 +676,7 @@ $("temperatureUnit").addEventListener("change", event => {
       const canonicalCelsius = Number(rateInput.value);
       if (Number.isFinite(canonicalCelsius)) {
         rateInput.dataset.celsiusValue = String(canonicalCelsius);
-        rateInput.value = String(Math.round((canonicalCelsius * 1.8) + 32));
+        rateInput.value = String(Math.round(canonicalCelsius * 1.8));
       }
     } else {
       const canonicalCelsius = Number(rateInput.dataset.celsiusValue);

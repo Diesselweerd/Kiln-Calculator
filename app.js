@@ -15,6 +15,8 @@ const STATE_KEY = "kilncalc-v5-current";
 const PROJECTS_KEY = "kilncalc-v5-projects";
 const SETTINGS_KEY = "kilncalc-v5-settings";
 const HISTORY_LIMIT = 50;
+const CERAMIC_RATE_DEFAULT_C = 330;
+const CERAMIC_RATE_MIGRATION_KEY = "kilncalc-v5-ceramic-rate-330-cph-v1";
 
 let state = structuredClone(DEFAULT_INPUT);
 let undoStack = [];
@@ -148,7 +150,7 @@ function writeForm(data) {
   if (ceramicRateInput && Number.isFinite(canonicalCelsius)) {
     ceramicRateInput.dataset.celsiusValue = String(canonicalCelsius);
     if ((data.temperatureUnit || temperatureUnit()) === "F") {
-      ceramicRateInput.value = String(Math.round(canonicalCelsius * 1.8));
+      ceramicRateInput.value = String(Math.round(cRateToF(canonicalCelsius)));
     } else {
       ceramicRateInput.value = String(Math.round(canonicalCelsius));
     }
@@ -220,8 +222,19 @@ function loadCurrent() {
   try {
     const saved = JSON.parse(localStorage.getItem(STATE_KEY));
     state = { ...DEFAULT_INPUT, ...(saved || {}) };
+
+    // One-time migration for versions that stored or retained an incorrect
+    // Ceramic mold maximum rate. The value is a temperature-change rate,
+    // canonically stored in °C/hour. Existing autosaved current-state data
+    // otherwise overrides DEFAULT_INPUT indefinitely after an app update.
+    if (localStorage.getItem(CERAMIC_RATE_MIGRATION_KEY) !== "done") {
+      state.ceramicMaxRate = CERAMIC_RATE_DEFAULT_C;
+      localStorage.setItem(CERAMIC_RATE_MIGRATION_KEY, "done");
+      localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    }
   } catch {
     state = clone(DEFAULT_INPUT);
+    state.ceramicMaxRate = CERAMIC_RATE_DEFAULT_C;
   }
   writeForm(state);
   lastSnapshot = snapshot();
@@ -434,7 +447,7 @@ function saveProject() {
 }
 
 function newProject() {
-  writeForm(DEFAULT_INPUT);
+  writeForm({ ...DEFAULT_INPUT, ceramicMaxRate: CERAMIC_RATE_DEFAULT_C });
   $("activeProjectId").value = "";
   undoStack = [];
   redoStack = [];
@@ -676,7 +689,7 @@ $("temperatureUnit").addEventListener("change", event => {
       const canonicalCelsius = Number(rateInput.value);
       if (Number.isFinite(canonicalCelsius)) {
         rateInput.dataset.celsiusValue = String(canonicalCelsius);
-        rateInput.value = String(Math.round(canonicalCelsius * 1.8));
+        rateInput.value = String(Math.round(cRateToF(canonicalCelsius)));
       }
     } else {
       const canonicalCelsius = Number(rateInput.dataset.celsiusValue);

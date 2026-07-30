@@ -295,3 +295,13 @@ The Refresh button now also:
 - Fahrenheit equivalent: `594 °F/hour`.
 - Rate conversion uses `°F/hour = °C/hour × 1.8`; no `+32` offset is applied.
 - Both unit modes display whole numbers.
+
+
+## Version 5.3.13
+
+- Deep correction of the Ceramic mold maximum rate default.
+- Canonical default is `330 °C/hour`.
+- Fahrenheit display is `594 °F/hour` (`330 × 1.8`).
+- No `+32` temperature offset is used because this field is a rate.
+- Adds a one-time migration of the autosaved current state, which previously overrode corrected source defaults in existing browser/PWA installations.
+- New projects also explicitly start at the corrected canonical rate.

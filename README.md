@@ -244,3 +244,27 @@ The Refresh button now also:
 - Every digit can therefore be removed before a replacement value is entered.
 - Rounding and recalculation occur when the edit is completed by changing or leaving the field.
 - An empty field restores the previous valid whole-number value only after leaving the field.
+
+
+## Version 5.3.6
+
+- In Fahrenheit mode, numeric temperatures in `Automatic firing schedule` are rounded to whole degrees.
+- `Skip` and `End` remain unchanged.
+- Celsius formatting is unchanged.
+
+
+## Version 5.3.7
+
+- Replaces the default Project description text `Proefstuk` with the placeholder `Enter your project's name here`.
+- Converts Ceramic mold maximum rate from Celsius to Fahrenheit with `Tf = (Tc × 1.8) + 32`.
+- Converts back to Celsius with `Tc = (Tf − 32) / 1.8`.
+- Displays and finalizes the Fahrenheit input as a rounded whole number.
+
+
+## Version 5.3.8
+
+- Confirms that Ceramic mold maximum rate remains internally stored and calculated in Celsius.
+- Fahrenheit mode now provides a rounded display conversion only.
+- Returning to Celsius restores the canonical stored Celsius value directly.
+- No Fahrenheit-to-Celsius calculation is performed for this field.
+- The Fahrenheit representation is read-only to prevent changing the canonical value through a display-only unit.

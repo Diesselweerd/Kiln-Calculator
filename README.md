@@ -305,3 +305,11 @@ The Refresh button now also:
 - No `+32` temperature offset is used because this field is a rate.
 - Adds a one-time migration of the autosaved current state, which previously overrode corrected source defaults in existing browser/PWA installations.
 - New projects also explicitly start at the corrected canonical rate.
+
+
+## Version 5.3.14
+- Robustly stores Ceramic mold maximum rate only as canonical °C/hour.
+- Default is 330 °C/hour; Fahrenheit display is 594 °F/hour.
+- Uses a new state schema to prevent legacy local-storage values from overriding the corrected default.
+- Uses versioned JavaScript filenames to prevent stale browser/PWA code from applying old conversion logic.
+- Centralizes all ceramic-rate rendering and conversion; no +32 offset is used.

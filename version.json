@@ -1,6 +1,6 @@
 {
-  "version": "5.3.13",
+  "version": "5.3.14",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-07-30",
-  "notes": "Deep fix: migrates the autosaved current-state ceramic mold rate to the canonical default 330 \u00b0C/hour, displays 594 \u00b0F/hour in Fahrenheit mode, and uses rate conversion without a +32 offset."
+  "notes": "Robust ceramic rate correction: canonical 330 \u00b0C/hour, display 594 \u00b0F/hour, new state schema, versioned JavaScript assets, and centralized rate conversion."
 }

@@ -313,3 +313,11 @@ The Refresh button now also:
 - Uses a new state schema to prevent legacy local-storage values from overriding the corrected default.
 - Uses versioned JavaScript filenames to prevent stale browser/PWA code from applying old conversion logic.
 - Centralizes all ceramic-rate rendering and conversion; no +32 offset is used.
+
+
+## Version 5.3.15
+
+- All calculated Fahrenheit rates in **Automatic firing schedule** are rounded and displayed as whole numbers.
+- Fahrenheit rate conversion remains `°F/hour = °C/hour × 1.8`.
+- Celsius schedule-rate display remains unchanged.
+- Fahrenheit rates embedded in schedule notes are also displayed as whole numbers.

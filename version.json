@@ -1,6 +1,6 @@
 {
-  "version": "5.3.15",
+  "version": "5.3.18",
   "workbookVersion": "V 22 juli 2026",
-  "released": "2026-07-31",
-  "notes": "All calculated Fahrenheit rates in Automatic firing schedule are displayed as whole numbers. Celsius rate display is unchanged."
+  "released": "2026-08-07",
+  "notes": "Removed diagonal calculation and display. Rectangular glass uses only the surface-equivalent diameter as effective diameter."
 }

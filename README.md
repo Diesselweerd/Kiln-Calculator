@@ -321,3 +321,29 @@ The Refresh button now also:
 - Fahrenheit rate conversion remains `°F/hour = °C/hour × 1.8`.
 - Celsius schedule-rate display remains unchanged.
 - Fahrenheit rates embedded in schedule notes are also displayed as whole numbers.
+
+
+## Version 5.3.16
+
+- Printing/PDF uses the exact current **Project description** as the document title.
+- The same Project description is printed visibly as the title at the top of the PDF.
+- The former `KilnCalc - ` prefix has been removed.
+- The regular application title is restored after printing.
+
+
+## Version 5.3.17
+
+- Round glass: the field title is `Diameter`.
+- Rectangular glass: the field title is `Diameter (surface equivalent)`.
+- Rectangular surface area is `Length × Width`.
+- Surface-equivalent diameter is `1.1284 × √(Length × Width)`.
+- The surface-equivalent diameter is used as the rectangular effective size in calculations.
+- The displayed equivalent diameter remains rounded to the nearest whole centimetre.
+- The geometric `Diagonal` remains calculated separately and displayed to one decimal.
+- All version 5.3.16 Printing/PDF functionality is retained.
+
+## Version 5.3.18
+- Removed the diagonal calculation and its display from Shape & dimensions.
+- Rectangular glass uses the surface-equivalent diameter `1.1284 × √(Length × Width)` in the same effective-size role as the entered diameter for round glass.
+- Rectangular validation now uses the surface-equivalent diameter instead of the diagonal.
+- Version 5.3.17 surface-equivalent diameter behavior and prior Printing/PDF functionality are retained.

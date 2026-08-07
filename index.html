@@ -11,13 +11,14 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="styles.css">
-  <title>KilnCalc 5.3.15</title>
+  <title>KilnCalc 5.3.18</title>
 </head>
 <body>
+  <h1 id="printProjectTitle" class="print-project-title" aria-hidden="true"></h1>
 <header class="app-header">
   <div class="header-inner">
     <div>
-      <h1>KilnCalc <span>5.3.15</span></h1>
+      <h1>KilnCalc <span>5.3.18</span></h1>
       <p>Glass fusing & slumping calculator</p>
     </div>
     <button id="newButton" class="header-button">New</button>
@@ -63,7 +64,7 @@
         </select>
       </label>
 
-      <label id="roundCard">Diameter / effective size <span>cm</span>
+      <label id="roundCard"><span id="diameterFieldTitle">Diameter</span> <span>cm</span>
         <input id="roundDiameter" type="number" min="0" max="60" step="1" value="40">
         <small>Editable for round glass; calculated and locked for rectangular glass.</small>
       </label>
@@ -82,17 +83,12 @@
       </label>
 
       <p id="rectangleHelp" class="info-strip full" hidden>
-        Both dimensions are required. The calculated diagonal replaces the diameter automatically.
+        Both dimensions are required. The surface-equivalent diameter is calculated automatically.
       </p>
 
       <div class="calculated-field full">
         <div><strong>Effective size used</strong><small id="effectiveMessage"></small></div>
         <output><span id="effectiveSize">40.0</span> cm</output>
-      </div>
-
-      <div class="calculated-field subtle full">
-        <div><strong>Diagonal</strong><small>Rounded to one decimal.</small></div>
-        <output><span id="diagonal">—</span> cm</output>
       </div>
     </div>
   </details>
@@ -274,7 +270,7 @@
 
 <div id="toast" class="toast"></div>
 
-<script type="module" src="app-5.3.15.js"></script>
+<script type="module" src="app-5.3.18.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("saveProjectButtonBottom").addEventListener("click", () =>

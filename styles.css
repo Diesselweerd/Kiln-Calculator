@@ -298,3 +298,21 @@ th:first-child,td:first-child { text-align:left; }
 .toolbar .theme-control select#temperatureUnit {
   min-width: 132px;
 }
+
+
+.print-project-title {
+  display: none;
+}
+
+@media print {
+  .print-project-title {
+    display: block !important;
+    margin: 0 0 18pt 0;
+    padding: 0;
+    font-size: 20pt;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: left;
+    page-break-after: avoid;
+  }
+}

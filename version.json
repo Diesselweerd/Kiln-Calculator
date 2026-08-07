@@ -1,6 +1,6 @@
 {
-  "version": "5.3.18",
+  "version": "5.3.20",
   "workbookVersion": "V 22 juli 2026",
   "released": "2026-08-07",
-  "notes": "Removed diagonal calculation and display. Rectangular glass uses only the surface-equivalent diameter as effective diameter."
+  "notes": "Based on 5.3.18. When Round glass is selected, Length and Width are cleared visibly and stored as zero."
 }

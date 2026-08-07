@@ -347,3 +347,12 @@ The Refresh button now also:
 - Rectangular glass uses the surface-equivalent diameter `1.1284 × √(Length × Width)` in the same effective-size role as the entered diameter for round glass.
 - Rectangular validation now uses the surface-equivalent diameter instead of the diagonal.
 - Version 5.3.17 surface-equivalent diameter behavior and prior Printing/PDF functionality are retained.
+
+
+## Version 5.3.20
+
+- Based on version 5.3.18.
+- When **Round glass** is selected, the visible `Length` and `Width` fields are cleared.
+- Round mode stores Length and Width as zero so old rectangular values cannot reappear after autosave/reload.
+- The version 5.3.18 removal of the diagonal calculation/display is retained.
+- Rectangular glass continues to use the surface-equivalent diameter.

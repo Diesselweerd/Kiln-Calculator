@@ -356,3 +356,10 @@ The Refresh button now also:
 - Round mode stores Length and Width as zero so old rectangular values cannot reappear after autosave/reload.
 - The version 5.3.18 removal of the diagonal calculation/display is retained.
 - Rectangular glass continues to use the surface-equivalent diameter.
+
+
+## Version 5.3.21
+- Removed the automatic rectangular-mode checkbox in Shape and dimensions.
+- Removed its associated automatic shape-switching logic.
+- Removed the information box directly below it beginning with `Both dimensions are required`.
+- All other version 5.3.20 behavior is retained.

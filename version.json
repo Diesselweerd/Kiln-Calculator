@@ -1,6 +1,6 @@
 {
-  "version": "5.3.20",
+  "version": "5.3.21",
   "workbookVersion": "V 22 juli 2026",
-  "released": "2026-08-07",
-  "notes": "Based on 5.3.18. When Round glass is selected, Length and Width are cleared visibly and stored as zero."
+  "released": "2026-08-08",
+  "notes": "Removed the automatic rectangular-mode checkbox, its associated logic, and the rectangular help box."
 }

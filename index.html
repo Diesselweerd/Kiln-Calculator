@@ -11,14 +11,14 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="styles.css">
-  <title>KilnCalc 5.3.20</title>
+  <title>KilnCalc 5.3.21</title>
 </head>
 <body>
   <h1 id="printProjectTitle" class="print-project-title" aria-hidden="true"></h1>
 <header class="app-header">
   <div class="header-inner">
     <div>
-      <h1>KilnCalc <span>5.3.20</span></h1>
+      <h1>KilnCalc <span>5.3.21</span></h1>
       <p>Glass fusing & slumping calculator</p>
     </div>
     <button id="newButton" class="header-button">New</button>
@@ -76,15 +76,6 @@
       <label>Width <span>cm</span>
         <input id="width" type="number" min="0" max="60" step="0.1" value="0">
       </label>
-
-      <label class="switch-row full">
-        <input id="autoShape" type="checkbox" checked>
-        <span>Automatically switch to rectangular mode when a dimension is entered</span>
-      </label>
-
-      <p id="rectangleHelp" class="info-strip full" hidden>
-        Both dimensions are required. The surface-equivalent diameter is calculated automatically.
-      </p>
 
       <div class="calculated-field full">
         <div><strong>Effective size used</strong><small id="effectiveMessage"></small></div>
@@ -270,7 +261,7 @@
 
 <div id="toast" class="toast"></div>
 
-<script type="module" src="app-5.3.20.js"></script>
+<script type="module" src="app-5.3.21.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("saveProjectButtonBottom").addEventListener("click", () =>

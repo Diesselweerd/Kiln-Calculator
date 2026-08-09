@@ -363,3 +363,10 @@ The Refresh button now also:
 - Removed its associated automatic shape-switching logic.
 - Removed the information box directly below it beginning with `Both dimensions are required`.
 - All other version 5.3.20 behavior is retained.
+
+
+## Version 5.3.22
+- Replaces the rectangular-glass Help & calculation notes sentence with:
+  `enter length and width; to calculate the surface area equivalent diameter.`
+- Removes the **SHARE** option from the bottom of the page.
+- Removes the unused sharing JavaScript handler.

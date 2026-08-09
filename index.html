@@ -11,14 +11,14 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="styles.css">
-  <title>KilnCalc 5.3.21</title>
+  <title>KilnCalc 5.3.22</title>
 </head>
 <body>
   <h1 id="printProjectTitle" class="print-project-title" aria-hidden="true"></h1>
 <header class="app-header">
   <div class="header-inner">
     <div>
-      <h1>KilnCalc <span>5.3.21</span></h1>
+      <h1>KilnCalc <span>5.3.22</span></h1>
       <p>Glass fusing & slumping calculator</p>
     </div>
     <button id="newButton" class="header-button">New</button>
@@ -244,7 +244,7 @@
     <div class="panel-body help-content">
       <p><strong>Workbook source:</strong> Version 22 July 2026. The calculation constants and active formulas are reproduced in the JavaScript engine.</p>
       <p><strong>Round glass:</strong> enter the widest diameter.</p>
-      <p><strong>Rectangular glass:</strong> enter length and width; the rounded diagonal becomes the effective diameter.</p>
+      <p><strong>Rectangular glass:</strong> enter length and width; to calculate the surface area equivalent diameter.</p>
       <p><strong>Heating history:</strong> repeated firing receives a longer, more conservative transformation time.</p>
       <p><strong>Bubble soak:</strong> unavailable for slump processes because slump temperature is below the softening point.</p>
       <p><strong>FullFuse and dams:</strong> effective annealing thickness may be recalculated to 6 mm, matching the workbook logic.</p>
@@ -255,13 +255,12 @@
 
 <nav class="action-bar">
   <button id="saveProjectButtonBottom">Save</button>
-  <button id="shareButton">Share</button>
   <button id="printButton">Print / PDF</button>
 </nav>
 
 <div id="toast" class="toast"></div>
 
-<script type="module" src="app-5.3.21.js"></script>
+<script type="module" src="app-5.3.22.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("saveProjectButtonBottom").addEventListener("click", () =>
